@@ -21,6 +21,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -299,18 +301,42 @@ public class StorageManager {
         return sb.toString();
     }
 
+    private static final int MAX_RAW_CHECKUP_FOLDERS = 12;
+    private static final long MAX_RAW_CHECKUP_BYTES = 150L * 1024L * 1024L;
+
     public static void cleanupOldRawDumps(int keepDays) {
         File dir = new File(BASE_DIR_PATH);
         if (!dir.exists()) return;
         File[] files = dir.listFiles();
         if (files == null) return;
 
-        long cutoff = System.currentTimeMillis() - (keepDays * 24L * 3600L * 1000L);
+        List<File> checkups = new ArrayList<File>();
         for (File f : files) {
             if (f.isDirectory() && f.getName().startsWith("checkup-")) {
-                if (f.lastModified() < cutoff) {
-                    deleteRecursive(f);
-                }
+                checkups.add(f);
+            }
+        }
+        Collections.sort(checkups, new Comparator<File>() {
+            @Override
+            public int compare(File a, File b) {
+                return b.getName().compareTo(a.getName());
+            }
+        });
+
+        long cutoff = System.currentTimeMillis() - (keepDays * 24L * 3600L * 1000L);
+        long keptBytes = 0L;
+
+        for (int i = 0; i < checkups.size(); i++) {
+            File f = checkups.get(i);
+            long folderBytes = getFolderSize(f);
+            boolean tooOld = f.lastModified() < cutoff;
+            boolean tooMany = i >= MAX_RAW_CHECKUP_FOLDERS;
+            boolean tooLarge = i > 0 && (keptBytes + folderBytes) > MAX_RAW_CHECKUP_BYTES;
+
+            if (i > 0 && (tooOld || tooMany || tooLarge)) {
+                deleteRecursive(f);
+            } else {
+                keptBytes += folderBytes;
             }
         }
     }

@@ -1,4 +1,4 @@
-# Omnia Optimizer — Galaxy Universal Edition (`v4.4.0`)
+# Omnia Optimizer — Galaxy Universal Edition (`v4.4.1`)
 
 Aplicativo nativo Android (`com.omnia.optimizer`, sem root e com **0% de consumo em segundo plano**) focado em análise rigorosa de ciclos de bateria, telemetria de hardware sob demanda e detecção de wakelocks nocivos para aparelhos **Samsung Galaxy (linha S / Fold / Flip / One UI)** e Android 8.0+.
 

@@ -72,21 +72,24 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
             float prevMah = prefs.getFloat(KEY_LAST_DISCHARGE_MAH, -1f);
             long now = System.currentTimeMillis();
 
+            DumpHelper.FastSignature curSig = DumpHelper.readFastSignature();
             if (!forceExplicit) {
                 if (now - lastRun < DEBOUNCE_MS) {
                     return;
                 }
-                if ("JobScheduler".equals(source) && awaitingUnplug) {
-                    DumpHelper.FastSignature sig = DumpHelper.readFastSignature();
-                    boolean newCycleClock = sig.startClockTime != null && !sig.startClockTime.isEmpty() && !sig.startClockTime.equals(prevClock);
-                    boolean meaningfulDischarge = sig.totalDischargeMah > 0 && (prevMah < 0 || Math.abs(sig.totalDischargeMah - prevMah) >= 80.0);
-                    if (!newCycleClock && !meaningfulDischarge) {
-                        return;
-                    }
+                boolean hasClock = curSig.startClockTime != null && !curSig.startClockTime.isEmpty();
+                boolean sameClock = hasClock && curSig.startClockTime.equals(prevClock);
+                boolean meaningfulExtraDischarge = curSig.totalDischargeMah > 0
+                        && (prevMah < 0 || Math.abs(curSig.totalDischargeMah - prevMah) >= 80.0);
+
+                if (sameClock && !meaningfulExtraDischarge) {
+                    return;
+                }
+                if (awaitingUnplug && !hasClock && !meaningfulExtraDischarge) {
+                    return;
                 }
             }
 
-            DumpHelper.FastSignature curSig = DumpHelper.readFastSignature();
             prefs.edit()
                     .putLong(KEY_LAST_RUN, now)
                     .putBoolean(KEY_AWAITING_UNPLUG, true)
