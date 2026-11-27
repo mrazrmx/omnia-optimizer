@@ -37,6 +37,12 @@ public class DumpHelper {
     public static class FastSignature {
         public String startClockTime = "";
         public double totalDischargeMah = 0;
+        public double timeOnBatterySeconds = 0;
+        public double screenOnSeconds = 0;
+        public double screenOffSeconds = 0;
+        public double deepSleepPercent = 0;
+        public double screenOnDischargeMah = 0;
+        public double screenOffDischargeMah = 0;
     }
 
     public static class BatteryHealthInfo {
@@ -74,6 +80,7 @@ public class DumpHelper {
             BufferedReader br = new BufferedReader(new InputStreamReader(new ParcelFileDescriptor.AutoCloseInputStream(pipe[0])));
             String line;
             boolean inStats = false;
+            int statsLines = 0;
             while ((line = br.readLine()) != null) {
                 if (!inStats) {
                     if (line.startsWith("Statistics since last charge:")) {
@@ -81,14 +88,39 @@ public class DumpHelper {
                     }
                     continue;
                 }
+                statsLines++;
                 String trimmed = line.trim();
-                if (trimmed.startsWith("Discharge:") && sig.totalDischargeMah == 0) {
+                if (trimmed.startsWith("Time on battery:") && sig.timeOnBatterySeconds == 0) {
+                    int rtIdx = trimmed.indexOf("realtime");
+                    sig.timeOnBatterySeconds = parseDurationSeconds(rtIdx > 0 ? trimmed.substring(0, rtIdx) : trimmed);
+                } else if (trimmed.startsWith("Time on battery screen off:") && sig.screenOffSeconds == 0) {
+                    int rtIdx = trimmed.indexOf("realtime,");
+                    if (rtIdx > 0) {
+                        sig.screenOffSeconds = parseDurationSeconds(trimmed.substring(0, rtIdx));
+                        double uptimeOff = parseSecondDurationSeconds(trimmed);
+                        double deep = Math.max(0.0, sig.screenOffSeconds - uptimeOff);
+                        if (sig.screenOffSeconds > 0) {
+                            sig.deepSleepPercent = 100.0 * deep / sig.screenOffSeconds;
+                        }
+                    } else {
+                        sig.screenOffSeconds = parseDurationSeconds(trimmed);
+                    }
+                } else if (trimmed.startsWith("Discharge:") && sig.totalDischargeMah == 0) {
                     Matcher m = Pattern.compile("Discharge:\\s*([0-9.]+)").matcher(trimmed);
                     if (m.find()) sig.totalDischargeMah = Double.parseDouble(m.group(1));
+                } else if (trimmed.startsWith("Screen off discharge:") && sig.screenOffDischargeMah == 0) {
+                    Matcher m = Pattern.compile("Screen off discharge:\\s*([0-9.]+)").matcher(trimmed);
+                    if (m.find()) sig.screenOffDischargeMah = Double.parseDouble(m.group(1));
+                } else if (trimmed.startsWith("Screen on discharge:") && sig.screenOnDischargeMah == 0) {
+                    Matcher m = Pattern.compile("Screen on discharge:\\s*([0-9.]+)").matcher(trimmed);
+                    if (m.find()) sig.screenOnDischargeMah = Double.parseDouble(m.group(1));
                 } else if (trimmed.startsWith("Start clock time:")) {
                     sig.startClockTime = trimmed.substring("Start clock time:".length()).trim();
+                } else if (trimmed.startsWith("Screen on:") && sig.screenOnSeconds == 0) {
+                    int intIdx = trimmed.indexOf("Interactive:");
+                    sig.screenOnSeconds = parseDurationSeconds(intIdx > 0 ? trimmed.substring(0, intIdx) : trimmed);
                 }
-                if (sig.totalDischargeMah > 0 && !sig.startClockTime.isEmpty()) {
+                if ((sig.screenOnSeconds > 0 && sig.totalDischargeMah > 0 && !sig.startClockTime.isEmpty()) || statsLines >= 40) {
                     break;
                 }
             }
@@ -203,6 +235,10 @@ public class DumpHelper {
     }
 
     public static String performCollection(Context context, String userNote) {
+        return performCollection(context, userNote, false);
+    }
+
+    public static String performCollection(Context context, String userNote, boolean fastShutdown) {
         StringBuilder log = new StringBuilder();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HHmmss", Locale.US);
         String timestamp = sdf.format(new Date());
@@ -215,10 +251,14 @@ public class DumpHelper {
         dumpServiceDirect("battery", new String[0], new File(targetDir, "battery.txt"), log);
         dumpBatteryManagerInfo(context, new File(targetDir, "battery.txt"));
         dumpServiceDirect("power", new String[0], new File(targetDir, "power.txt"), log);
-        dumpServiceDirect("deviceidle", new String[0], new File(targetDir, "deviceidle.txt"), log);
-        dumpServiceDirect("display", new String[0], new File(targetDir, "display.txt"), log);
+        if (!fastShutdown) {
+            dumpServiceDirect("deviceidle", new String[0], new File(targetDir, "deviceidle.txt"), log);
+            dumpServiceDirect("display", new String[0], new File(targetDir, "display.txt"), log);
+        }
         dumpServiceDirect("batterystats", new String[0], new File(targetDir, "batterystats.txt"), log);
-        dumpServiceDirect("batterystats", new String[]{"--history"}, new File(targetDir, "history.txt"), log);
+        if (!fastShutdown) {
+            dumpServiceDirect("batterystats", new String[]{"--history"}, new File(targetDir, "history.txt"), log);
+        }
 
         copySystemFile("/proc/uptime", new File(targetDir, "uptime.txt"));
         copySystemFile("/proc/sys/kernel/random/boot_id", new File(targetDir, "boot_id.txt"));
@@ -296,6 +336,7 @@ public class DumpHelper {
         File bsFile = new File(dir, "batterystats.txt");
         List<AppUsageEntry> appList = new ArrayList<AppUsageEntry>();
         List<String> topWakelocks = new ArrayList<String>();
+        List<SilentDaemonEntry> silentDaemons = new ArrayList<SilentDaemonEntry>();
         double totalDischarge = 0;
         if (bsFile.exists()) {
             boolean inSinceLastCharge = false;
@@ -305,6 +346,12 @@ public class DumpHelper {
             boolean finishedGlobalPower = false;
             boolean inPartialWakelocks = false;
             boolean finishedPartialWakelocks = false;
+            boolean inWakeupReasons = false;
+            boolean finishedWakeupReasons = false;
+            String pendingDaemonUid = null;
+            double pendingDaemonFgSec = 0;
+            double pendingDaemonMah = 0;
+            boolean pendingDaemonHadScreen = false;
             double directScreenOnDischarge = 0;
 
             try {
@@ -355,6 +402,23 @@ public class DumpHelper {
                         } else if (!trimmed.isEmpty()) {
                             inPartialWakelocks = false;
                             finishedPartialWakelocks = true;
+                        }
+                    }
+
+                    if (trimmed.equals("All wakeup reasons:") && !finishedWakeupReasons) {
+                        inWakeupReasons = true;
+                        continue;
+                    } else if (inWakeupReasons) {
+                        if (trimmed.startsWith("Wakeup reason ")) {
+                            if (d.topWakeupReason.isEmpty()) {
+                                d.topWakeupReason = formatWakeupReasonEntry(trimmed);
+                            }
+                            inWakeupReasons = false;
+                            finishedWakeupReasons = true;
+                            continue;
+                        } else if (!trimmed.isEmpty()) {
+                            inWakeupReasons = false;
+                            finishedWakeupReasons = true;
                         }
                     }
 
@@ -409,6 +473,8 @@ public class DumpHelper {
                         d.mobile5gSeconds = parseDurationSeconds(trimmed);
                     } else if (trimmed.startsWith("Total partial wakelock time:") && d.wakelockSeconds == 0) {
                         d.wakelockSeconds = parseDurationSeconds(trimmed);
+                    } else if (trimmed.startsWith("Total WiFi Multicast wakelock time:") && d.wifiMulticastSeconds == 0) {
+                        d.wifiMulticastSeconds = parseDurationSeconds(trimmed);
                     } else if (inBrightnessBlock && (trimmed.startsWith("light ") || trimmed.startsWith("bright "))) {
                         Matcher m = Pattern.compile("\\(([0-9,.]+)\\s*%\\)").matcher(trimmed);
                         if (m.find()) {
@@ -428,6 +494,11 @@ public class DumpHelper {
                             if (durIdx >= 0) d.gnssSeconds = parseDurationSeconds(trimmed.substring(durIdx));
                         }
                     } else if (trimmed.startsWith("UID ")) {
+                        maybeCollectSilentDaemon(context, pendingDaemonUid, pendingDaemonFgSec, pendingDaemonMah, pendingDaemonHadScreen, silentDaemons);
+                        pendingDaemonUid = null;
+                        pendingDaemonFgSec = 0;
+                        pendingDaemonMah = 0;
+                        pendingDaemonHadScreen = false;
                         Matcher m = Pattern.compile("UID\\s+([^:]+):\\s*([0-9.]+)").matcher(trimmed);
                         if (m.find()) {
                             String uid = m.group(1);
@@ -435,9 +506,20 @@ public class DumpHelper {
                             if (mah > 5.0 && !uid.equals("1000") && !uid.equals("0") && !uid.equals("1001")) {
                                 appList.add(new AppUsageEntry(resolveUidName(context, uid), mah));
                             }
+                            pendingDaemonUid = uid;
+                            pendingDaemonMah = mah;
+                            pendingDaemonFgSec = extractForegroundSeconds(trimmed);
+                        }
+                    } else if (pendingDaemonUid != null) {
+                        if (trimmed.isEmpty() || trimmed.startsWith("(") || trimmed.startsWith("All ") || trimmed.startsWith("Statistics ")) {
+                            maybeCollectSilentDaemon(context, pendingDaemonUid, pendingDaemonFgSec, pendingDaemonMah, pendingDaemonHadScreen, silentDaemons);
+                            pendingDaemonUid = null;
+                        } else if (trimmed.startsWith("screen=") || trimmed.contains(" screen=")) {
+                            pendingDaemonHadScreen = true;
                         }
                     }
                 }
+                maybeCollectSilentDaemon(context, pendingDaemonUid, pendingDaemonFgSec, pendingDaemonMah, pendingDaemonHadScreen, silentDaemons);
                 br.close();
             } catch (Exception ignored) {}
 
@@ -454,6 +536,27 @@ public class DumpHelper {
                     wlSb.append(topWakelocks.get(i));
                 }
                 d.topWakelocksSummary = wlSb.toString();
+            }
+
+            if (!silentDaemons.isEmpty()) {
+                Collections.sort(silentDaemons, new Comparator<SilentDaemonEntry>() {
+                    @Override
+                    public int compare(SilentDaemonEntry a, SilentDaemonEntry b) {
+                        return Double.compare(b.fgSeconds, a.fgSeconds);
+                    }
+                });
+                StringBuilder fgSb = new StringBuilder();
+                int maxFg = Math.min(2, silentDaemons.size());
+                for (int i = 0; i < maxFg; i++) {
+                    SilentDaemonEntry se = silentDaemons.get(i);
+                    if (i > 0) fgSb.append(" · ");
+                    fgSb.append(se.label).append(" (fg ").append(formatShortDuration(se.fgSeconds)).append(" sem tela");
+                    if (se.mah >= 3.0) {
+                        fgSb.append(String.format(Locale.US, ", %.0f mAh", se.mah));
+                    }
+                    fgSb.append(")");
+                }
+                d.silentFgDaemonsSummary = fgSb.toString();
             }
 
             if (!appList.isEmpty()) {
@@ -484,6 +587,77 @@ public class DumpHelper {
 
         classifyCycleIntegrity(d, totalDischarge);
         return d;
+    }
+
+    private static final class SilentDaemonEntry {
+        final String label;
+        final double fgSeconds;
+        final double mah;
+        SilentDaemonEntry(String label, double fgSeconds, double mah) {
+            this.label = label;
+            this.fgSeconds = fgSeconds;
+            this.mah = mah;
+        }
+    }
+
+    private static double extractForegroundSeconds(String uidLine) {
+        Matcher mFg = Pattern.compile("\\bfg:\\s*[0-9.]+\\s*\\(([^)]+)\\)").matcher(uidLine);
+        if (mFg.find()) {
+            return parseDurationSeconds(mFg.group(1));
+        }
+        return 0.0;
+    }
+
+    private static void maybeCollectSilentDaemon(Context context, String uid, double fgSeconds, double mah,
+                                                 boolean hadScreen, List<SilentDaemonEntry> out) {
+        if (uid == null || !uid.startsWith("u0a") || fgSeconds < 3600.0 || hadScreen) return;
+        String pkg = resolveUidPrimaryPackage(context, uid);
+        if (pkg == null || pkg.isEmpty() || (context != null && pkg.equals(context.getPackageName()))) return;
+        if (isExpectedAmbientFgPackage(pkg)) return;
+        String label = resolveUidName(context, uid);
+        out.add(new SilentDaemonEntry(label, fgSeconds, mah));
+    }
+
+    private static boolean isExpectedAmbientFgPackage(String pkg) {
+        String low = pkg.toLowerCase(Locale.US);
+        return low.contains("aodservice")
+                || low.contains("routines")
+                || low.contains("routineplus")
+                || low.contains("launcher")
+                || low.contains("trebuchet")
+                || low.contains("spotify")
+                || low.contains("youtube")
+                || low.contains("wearable")
+                || low.contains("watchmanager")
+                || low.contains("fit3")
+                || low.contains("soundalive")
+                || low.contains("android.music")
+                || low.contains("dialer")
+                || low.contains("incallui")
+                || low.contains("clockpackage")
+                || low.contains("deskclock")
+                || low.contains("systemui");
+    }
+
+    private static String formatWakeupReasonEntry(String trimmedLine) {
+        String body = trimmedLine.substring("Wakeup reason ".length()).trim();
+        if (body.endsWith(" realtime")) {
+            body = body.substring(0, body.length() - " realtime".length()).trim();
+        }
+        body = body.replace("Abort: Pending Wakeup Sources: ", "Abort: ")
+                   .replace("Abort: Last active Wakeup Source: ", "Abort: ");
+        int colonIdx = body.lastIndexOf(": ");
+        String name = colonIdx > 0 ? body.substring(0, colonIdx).trim() : body;
+        String tail = colonIdx > 0 ? body.substring(colonIdx + 2).trim() : "";
+        if (name.length() > 38) {
+            name = name.substring(0, 35) + "...";
+        }
+        String dur = formatShortDuration(parseDurationSeconds(tail));
+        Matcher mCount = Pattern.compile("\\((\\d+)\\s+times\\)").matcher(tail);
+        if (mCount.find()) {
+            return name + " (" + dur + ", " + mCount.group(1) + "x)";
+        }
+        return tail.isEmpty() ? name : (name + " (" + dur + ")");
     }
 
     private static void classifyCycleIntegrity(CycleData d, double currentTotalDischarge) {
@@ -576,27 +750,46 @@ public class DumpHelper {
         return 0;
     }
 
-    public static String resolveUidName(Context context, String uidStr) {
-        if (context == null || uidStr == null) return uidStr;
+    public static int parseUidInt(String uidStr) {
+        if (uidStr == null) return -1;
         try {
-            int uid = -1;
             Matcher m = Pattern.compile("u0a(\\d+)").matcher(uidStr);
             if (m.find()) {
-                uid = 10000 + Integer.parseInt(m.group(1));
+                return 10000 + Integer.parseInt(m.group(1));
             } else if (uidStr.matches("\\d+")) {
-                uid = Integer.parseInt(uidStr);
+                return Integer.parseInt(uidStr);
             }
+        } catch (Throwable ignored) {}
+        return -1;
+    }
+
+    public static String resolveUidPrimaryPackage(Context context, String uidStr) {
+        if (context == null || uidStr == null) return "";
+        try {
+            int uid = parseUidInt(uidStr);
             if (uid > 0) {
                 PackageManager pm = context.getPackageManager();
                 String[] pkgs = pm.getPackagesForUid(uid);
                 if (pkgs != null && pkgs.length > 0) {
-                    ApplicationInfo ai = pm.getApplicationInfo(pkgs[0], 0);
-                    CharSequence label = pm.getApplicationLabel(ai);
-                    if (label != null) {
-                        return label.toString();
-                    }
                     return pkgs[0];
                 }
+            }
+        } catch (Throwable ignored) {}
+        return "";
+    }
+
+    public static String resolveUidName(Context context, String uidStr) {
+        if (context == null || uidStr == null) return uidStr;
+        try {
+            String pkg = resolveUidPrimaryPackage(context, uidStr);
+            if (!pkg.isEmpty()) {
+                PackageManager pm = context.getPackageManager();
+                ApplicationInfo ai = pm.getApplicationInfo(pkg, 0);
+                CharSequence label = pm.getApplicationLabel(ai);
+                if (label != null) {
+                    return label.toString();
+                }
+                return pkg;
             }
         } catch (Throwable ignored) {}
         return uidStr;

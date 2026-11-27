@@ -9,21 +9,40 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Sentinela Anti-Wakelock sob demanda e pos-ciclo (0% de consumo em 2o plano).
+ * Classifica locks ativos em tempo real (dumpsys power) e viloes de tela apagada (batterystats).
+ */
 public final class WakelockSentinel {
 
+    public static final class SuspectApp {
+        public String packageName = "";
+        public String appName = "";
+        public String reason = "";
+        public double weightScore = 0.0;
+        public boolean protectedApp = false;
+        public boolean expectedMedia = false;
+        public boolean inDozeUserWhitelist = false;
+    }
+
     public static final class SentinelReport {
-        public String severity = "OK";
+        public String severity = "OK"; // OK | ATENCAO | CRITICO
         public String headline = "Repouso limpo (sem ladrões detectados)";
         public String details = "";
         public String notificationSummary = "";
+        public final List<SuspectApp> suspects = new ArrayList<SuspectApp>();
     }
 
     private static final class ActiveLockEntry {
+        String packageName = "";
         String appName;
         String lockType;
         String tag;
@@ -33,6 +52,7 @@ public final class WakelockSentinel {
     }
 
     private static final class PartialLockStat {
+        String packageName = "";
         String appName;
         String tag;
         double actualSeconds;
@@ -42,6 +62,7 @@ public final class WakelockSentinel {
     }
 
     private static final class ScreenOffUidEntry {
+        String packageName = "";
         String appName;
         boolean isSystemUid;
         double nonAudioOffMah;
@@ -53,16 +74,57 @@ public final class WakelockSentinel {
     private WakelockSentinel() {
     }
 
+    /**
+     * Varredura instantanea sob demanda disparada pelo usuario (zero escrita em disco).
+     */
     public static SentinelReport scanLiveNow(Context context) {
         String powerText = DumpHelper.dumpServiceText("power");
         String bsText = DumpHelper.dumpServiceText("batterystats");
-        return analyzeTexts(context, null, powerText, bsText, true);
+        String idleText = DumpHelper.dumpServiceText("deviceidle");
+        return analyzeTexts(context, null, powerText, bsText, idleText, true);
     }
 
+    /**
+     * Checagem ultra-rapida (~15ms) somente de locks segurando CPU no instante via dumpsys power.
+     */
+    public static SentinelReport scanPowerQuick(Context context) {
+        String powerText = DumpHelper.dumpServiceText("power");
+        List<ActiveLockEntry> activeLocks = parseActivePowerLocks(context, powerText);
+        Collections.sort(activeLocks, new Comparator<ActiveLockEntry>() {
+            @Override
+            public int compare(ActiveLockEntry a, ActiveLockEntry b) {
+                return Double.compare(b.ageSeconds, a.ageSeconds);
+            }
+        });
+        SentinelReport rep = new SentinelReport();
+        boolean crit = false;
+        boolean att = false;
+        String culprit = "";
+        for (ActiveLockEntry e : activeLocks) {
+            boolean suspicious = !e.expectedMedia && (e.isLong || e.ageSeconds >= 20.0);
+            if (suspicious) {
+                att = true;
+                if (e.ageSeconds >= 180.0 || e.isLong) crit = true;
+                if (culprit.isEmpty()) {
+                    culprit = e.appName + " (" + e.tag + " · " + DumpHelper.formatShortDurationExact(e.ageSeconds) + ")";
+                }
+            }
+        }
+        rep.severity = crit ? "CRITICO" : (att ? "ATENCAO" : "OK");
+        rep.headline = culprit.isEmpty()
+                ? "LIMPO AGORA: Nenhum lock longo ativo."
+                : (crit ? "CRÍTICO · Ativo: " : "ATENÇÃO · Ativo: ") + culprit;
+        return rep;
+    }
+
+    /**
+     * Avaliacao pos-coleta usando os arquivos ja gravados no ciclo (custo zero extra de Binder).
+     */
     public static SentinelReport evaluateCollectedCycle(Context context, CycleData cycle, File checkupDir) {
         String powerText = readFileIfExists(new File(checkupDir, "power.txt"));
         String bsText = readFileIfExists(new File(checkupDir, "batterystats.txt"));
-        SentinelReport rep = analyzeTexts(context, cycle, powerText, bsText, false);
+        String idleText = readFileIfExists(new File(checkupDir, "deviceidle.txt"));
+        SentinelReport rep = analyzeTexts(context, cycle, powerText, bsText, idleText, false);
         if (cycle != null) {
             cycle.sentinelSeverity = rep.severity;
             cycle.sentinelSummary = rep.headline + (rep.notificationSummary.isEmpty() ? "" : "\n" + rep.notificationSummary);
@@ -71,15 +133,15 @@ public final class WakelockSentinel {
     }
 
     private static SentinelReport analyzeTexts(Context context, CycleData cycle,
-                                               String powerText, String bsText, boolean liveMode) {
+                                               String powerText, String bsText, String idleText, boolean liveMode) {
         SentinelReport rep = new SentinelReport();
         if ((powerText == null || powerText.trim().isEmpty()) && (bsText == null || bsText.trim().isEmpty())) {
             rep.severity = "ATENCAO";
             rep.headline = "Permissão DUMP / BATTERY_STATS pendente";
-            rep.details = "Conceda DUMP e BATTERY_STATS na aba OTIM para habilitar o Sentinela Anti-Wakelock.";
+            rep.details = "Conceda DUMP e BATTERY_STATS (ou use Shizuku Auto-Ativar na aba OTIM) para habilitar o Sentinela.";
             return rep;
         }
-
+        Set<String> userDozeWhitelist = parseUserDozeWhitelist(idleText);
         List<ActiveLockEntry> activeLocks = parseActivePowerLocks(context, powerText);
         List<PartialLockStat> partialStats = new ArrayList<PartialLockStat>();
         List<ScreenOffUidEntry> offUids = new ArrayList<ScreenOffUidEntry>();
@@ -105,10 +167,12 @@ public final class WakelockSentinel {
         });
 
         List<String> findings = new ArrayList<String>();
+        Map<String, SuspectApp> suspectMap = new LinkedHashMap<String, SuspectApp>();
         boolean critical = false;
         boolean attention = false;
         String topCulprit = "";
 
+        // 1. Avaliar taxa liquida apagada (descontando AOD/Screen doze) se houver ciclo
         if (cycle != null && cycle.screenOffSeconds >= 1800) {
             double netOffMah = Math.max(0.0, cycle.dischargeOffMah - cycle.screenDozeDischargeMah);
             double netRateOff = netOffMah / (cycle.screenOffSeconds / 3600.0);
@@ -118,16 +182,17 @@ public final class WakelockSentinel {
             if (netNoAudioRate >= 135.0 || cycle.deepSleepPercent < 50.0) {
                 critical = true;
                 findings.add(String.format(Locale.US,
-                        "🚨 Repouso crítico: %.0f mAh/h líquido (sem AOD/áudio) · Sono %.1f%%",
+                        "🚨 Repouso crítico: %.0f mAh/h líquido (sem AOD/áudio) · Sono Profundo %.1f%%",
                         netNoAudioRate, cycle.deepSleepPercent));
             } else if (netRateOff >= 95.0 || cycle.deepSleepPercent < 60.0) {
                 attention = true;
                 findings.add(String.format(Locale.US,
-                        "⚠️ Repouso elevado: %.0f mAh/h sem AOD · Sono %.1f%%",
+                        "⚠️ Repouso elevado: %.0f mAh/h sem AOD · Sono Profundo %.1f%%",
                         netRateOff, cycle.deepSleepPercent));
             }
         }
 
+        // 2. Active Wake Locks neste exato instante (dumpsys power)
         StringBuilder activeSb = new StringBuilder();
         int suspectActiveCount = 0;
         for (ActiveLockEntry e : activeLocks) {
@@ -137,15 +202,20 @@ public final class WakelockSentinel {
                 attention = true;
                 if (e.ageSeconds >= 180.0 || e.isLong) critical = true;
                 if (topCulprit.isEmpty()) topCulprit = e.appName + " (" + e.tag + ")";
+                addSuspect(context, suspectMap, e.packageName, e.appName,
+                        "Lock ativo " + DumpHelper.formatShortDurationExact(e.ageSeconds) + " (" + e.tag + ")",
+                        500.0 + e.ageSeconds, e.expectedMedia);
             }
             if (e.isLong || e.ageSeconds >= 3.0) {
-                String ageFmt = e.ageSeconds >= 1.0 ? DumpHelper.formatShortDurationExact(e.ageSeconds) : "<1s";
+                String ageFmt = e.ageSeconds >= 1.0 ? DumpHelper.formatShortDurationExact(e.ageSeconds)
+                        : "<1s";
                 activeSb.append(String.format(Locale.US, "\n   %s %s: %s (%s%s)",
                         e.expectedMedia ? "🎵" : (suspicious ? "🚨" : "•"),
                         e.appName, e.tag, ageFmt, e.isLong ? " LONG" : ""));
             }
         }
 
+        // 3. Partial wakelocks nocivos / rodando no batterystats
         StringBuilder partialSb = new StringBuilder();
         int suspectPartialCount = 0;
         for (PartialLockStat p : partialStats) {
@@ -158,6 +228,9 @@ public final class WakelockSentinel {
                     else attention = true;
                 }
                 if (topCulprit.isEmpty()) topCulprit = p.appName + " (" + p.tag + ")";
+                addSuspect(context, suspectMap, p.packageName, p.appName,
+                        "Lock " + DumpHelper.formatShortDurationExact(p.actualSeconds) + (runningNow ? " [PRESO]" : ""),
+                        200.0 + p.actualSeconds / 60.0 + (runningNow ? 250.0 : 0.0), p.expectedMedia);
             }
             if (partialSb.length() < 420 && (heavyNonMedia || p.actualSeconds >= 180.0)) {
                 partialSb.append(String.format(Locale.US, "\n   %s %s: %s · efetivo %s%s",
@@ -167,11 +240,17 @@ public final class WakelockSentinel {
             }
         }
 
+        // 4. Maiores consumidores em tela apagada (CPU/Wakelock sem musica)
         StringBuilder offUidSb = new StringBuilder();
         int listedOff = 0;
         for (ScreenOffUidEntry u : offUids) {
             if (u.isSystemUid && u.nonAudioOffMah < 120.0) continue;
             if (!u.isSystemUid && u.nonAudioOffMah < 12.0 && u.audioOffMah < 15.0) continue;
+            if (!u.isSystemUid && u.nonAudioOffMah >= 20.0) {
+                addSuspect(context, suspectMap, u.packageName, u.appName,
+                        String.format(Locale.US, "%.0f mAh apag. (CPU %.0f)", u.nonAudioOffMah, u.cpuMah),
+                        100.0 + u.nonAudioOffMah, false);
+            }
             if (!u.isSystemUid && u.nonAudioOffMah >= 45.0) {
                 attention = true;
                 if (u.nonAudioOffMah >= 90.0) critical = true;
@@ -187,6 +266,21 @@ public final class WakelockSentinel {
                 }
             }
         }
+
+        for (SuspectApp s : suspectMap.values()) {
+            if (userDozeWhitelist.contains(s.packageName)) {
+                s.inDozeUserWhitelist = true;
+                s.reason = s.reason + " · [Whitelist Doze]";
+            }
+            rep.suspects.add(s);
+        }
+        Collections.sort(rep.suspects, new Comparator<SuspectApp>() {
+            @Override
+            public int compare(SuspectApp a, SuspectApp b) {
+                if (a.protectedApp != b.protectedApp) return a.protectedApp ? 1 : -1;
+                return Double.compare(b.weightScore, a.weightScore);
+            }
+        });
 
         rep.severity = critical ? "CRITICO" : (attention ? "ATENCAO" : "OK");
         if (critical) {
@@ -248,6 +342,20 @@ public final class WakelockSentinel {
         return rep;
     }
 
+    private static Set<String> parseUserDozeWhitelist(String idleText) {
+        Set<String> set = new java.util.HashSet<String>();
+        if (idleText == null || idleText.isEmpty()) return set;
+        for (String line : idleText.split("\\r?\\n")) {
+            String trimmed = line.trim();
+            if (!trimmed.startsWith("user,")) continue;
+            String[] parts = trimmed.split(",");
+            if (parts.length >= 2 && !parts[1].trim().isEmpty()) {
+                set.add(parts[1].trim());
+            }
+        }
+        return set;
+    }
+
     private static List<ActiveLockEntry> parseActivePowerLocks(Context context, String powerText) {
         List<ActiveLockEntry> list = new ArrayList<ActiveLockEntry>();
         if (powerText == null || powerText.isEmpty()) return list;
@@ -295,6 +403,7 @@ public final class WakelockSentinel {
                         if (mu.find()) uidStr = mu.group(1);
                     }
                 }
+                e.packageName = DumpHelper.resolveUidPrimaryPackage(context, uidStr);
                 e.appName = resolveFriendlyApp(context, uidStr);
                 e.tag = DumpHelper.cleanWakelockTag(rawTag);
                 e.expectedMedia = isExpectedMediaTag(rawTag, e.appName);
@@ -348,6 +457,7 @@ public final class WakelockSentinel {
                         }
                         if (!currentUid.isEmpty() && trimmed.startsWith("(on battery, screen off/doze)")) {
                             ScreenOffUidEntry entry = new ScreenOffUidEntry();
+                            entry.packageName = DumpHelper.resolveUidPrimaryPackage(context, currentUid);
                             entry.appName = currentApp;
                             entry.isSystemUid = "1000".equals(currentUid) || "0".equals(currentUid) || "1001".equals(currentUid);
                             entry.cpuMah = extractMetric(trimmed, "cpu=");
@@ -385,6 +495,7 @@ public final class WakelockSentinel {
                             PartialLockStat stat = new PartialLockStat();
                             String uid = mp.group(1);
                             String rawTag = mp.group(2);
+                            stat.packageName = DumpHelper.resolveUidPrimaryPackage(context, uid);
                             stat.appName = resolveFriendlyApp(context, uid);
                             stat.tag = DumpHelper.cleanWakelockTag(rawTag);
 
@@ -440,6 +551,30 @@ public final class WakelockSentinel {
             try { secs += Double.parseDouble(ms.group(1)) / 1000.0; } catch (NumberFormatException ignored) {}
         }
         return secs;
+    }
+
+    private static void addSuspect(Context context, Map<String, SuspectApp> map,
+                                   String pkg, String appName, String reason,
+                                   double score, boolean expectedMedia) {
+        if (pkg == null || pkg.trim().isEmpty()) return;
+        String cleanPkg = pkg.trim();
+        SuspectApp existing = map.get(cleanPkg);
+        if (existing != null) {
+            if (score > existing.weightScore) {
+                existing.weightScore = score;
+                existing.reason = reason;
+            }
+            if (expectedMedia) existing.expectedMedia = true;
+            return;
+        }
+        SuspectApp s = new SuspectApp();
+        s.packageName = cleanPkg;
+        s.appName = (appName != null && !appName.isEmpty()) ? appName : cleanPkg;
+        s.reason = reason;
+        s.weightScore = score;
+        s.expectedMedia = expectedMedia;
+        s.protectedApp = expectedMedia || SystemTweaksController.isProtectedPackage(context, cleanPkg);
+        map.put(cleanPkg, s);
     }
 
     private static String resolveFriendlyApp(Context context, String uidStr) {

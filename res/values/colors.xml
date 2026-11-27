@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material 3 / One UI Material You (Light Fallback Android 8-11) -->
+    <color name="omnia_bg">#F5F7FB</color>
+    <color name="omnia_surface">#FFFFFF</color>
+    <color name="omnia_surface_alt">#EDF1F8</color>
+    <color name="omnia_nav_bg">#FFFFFF</color>
+    <color name="omnia_stroke">#DCE3EE</color>
+
+    <color name="omnia_primary">#1D63ED</color>
+    <color name="omnia_primary_container">#DCE9FF</color>
+    <color name="omnia_on_primary_container">#0B398C</color>
+
+    <color name="omnia_text_primary">#111827</color>
+    <color name="omnia_text_secondary">#4B5563</color>
+    <color name="omnia_text_muted">#6B7280</color>
+
+    <!-- Semantic Tones (Light Contrast >= 4.5:1) -->
+    <color name="omnia_ok_bg">#E6F6EC</color>
+    <color name="omnia_ok_stroke">#8FD4AB</color>
+    <color name="omnia_ok_text">#0F6B3B</color>
+
+    <color name="omnia_info_bg">#E6F0FF</color>
+    <color name="omnia_info_stroke">#96BCFA</color>
+    <color name="omnia_info_text">#1546AD</color>
+
+    <color name="omnia_warn_bg">#FEF3DC</color>
+    <color name="omnia_warn_stroke">#F0BF5E</color>
+    <color name="omnia_warn_text">#8E4E00</color>
+
+    <color name="omnia_alert_bg">#FEE9ED</color>
+    <color name="omnia_alert_stroke">#F09CAE</color>
+    <color name="omnia_alert_text">#B4233C</color>
+
+    <!-- Charts -->
+    <color name="omnia_chart_grid">#D5DFEE</color>
+    <color name="omnia_chart_spoke">#E1E8F3</color>
+    <color name="omnia_chart_on">#E11D48</color>
+    <color name="omnia_chart_off">#0284C7</color>
+
+    <!-- Explicit Technical Charcoal (MemHogs RAM & ADB Console) -->
+    <color name="omnia_charcoal_bg">#0B0E11</color>
+    <color name="omnia_charcoal_surface">#12161B</color>
+    <color name="omnia_charcoal_cell">#1A212A</color>
+    <color name="omnia_charcoal_stroke">#263241</color>
+    <color name="omnia_charcoal_text">#D7DEE8</color>
+    <color name="omnia_charcoal_dim">#7D899B</color>
+    <color name="omnia_charcoal_amber">#FFB454</color>
+    <color name="omnia_charcoal_cyan">#56C9DB</color>
+    <color name="omnia_charcoal_green">#7EC699</color>
+    <color name="omnia_charcoal_red">#FF5555</color>
+</resources>

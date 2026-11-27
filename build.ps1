@@ -4,7 +4,7 @@ param(
     [string]$KeystorePath = "$PSScriptRoot\local-dev.keystore",
     [string]$KeystorePass = "android",
     [string]$KeyAlias = "omniauniversal",
-    [string]$OutApk = "$PSScriptRoot\OmniaOptimizer-Universal-v4.4.1.apk"
+    [string]$OutApk = "$PSScriptRoot\OmniaOptimizer-Universal-v6.0.apk"
 )
 
 $ErrorActionPreference = "Stop"

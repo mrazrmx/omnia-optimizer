@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material 3 / One UI Dark Fallback (Android 8-11) -->
+    <color name="omnia_bg">#090C12</color>
+    <color name="omnia_surface">#121824</color>
+    <color name="omnia_surface_alt">#1A2232</color>
+    <color name="omnia_nav_bg">#0E131D</color>
+    <color name="omnia_stroke">#253248</color>
+
+    <color name="omnia_primary">#78B2FF</color>
+    <color name="omnia_primary_container">#1B3664</color>
+    <color name="omnia_on_primary_container">#E0EDFF</color>
+
+    <color name="omnia_text_primary">#F1F5F9</color>
+    <color name="omnia_text_secondary">#94A3B8</color>
+    <color name="omnia_text_muted">#64748B</color>
+
+    <!-- Semantic Tones (Dark OLED) -->
+    <color name="omnia_ok_bg">#0E2B1E</color>
+    <color name="omnia_ok_stroke">#10B981</color>
+    <color name="omnia_ok_text">#6EE7B7</color>
+
+    <color name="omnia_info_bg">#102446</color>
+    <color name="omnia_info_stroke">#3B82F6</color>
+    <color name="omnia_info_text">#93C5FD</color>
+
+    <color name="omnia_warn_bg">#2A1F0A</color>
+    <color name="omnia_warn_stroke">#F59E0B</color>
+    <color name="omnia_warn_text">#FCD34D</color>
+
+    <color name="omnia_alert_bg">#2E1019</color>
+    <color name="omnia_alert_stroke">#F43F5E</color>
+    <color name="omnia_alert_text">#FDA4AF</color>
+
+    <!-- Charts -->
+    <color name="omnia_chart_grid">#223554</color>
+    <color name="omnia_chart_spoke">#1B2C47</color>
+    <color name="omnia_chart_on">#FF4D6D</color>
+    <color name="omnia_chart_off">#38BDF8</color>
+</resources>

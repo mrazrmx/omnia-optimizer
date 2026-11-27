@@ -15,6 +15,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Gráfico nativo em barras comparando a taxa ligada vs. apagada (mAh/h) ao longo dos ciclos.
+ */
 public class TrendChartView extends View {
 
     public static final class TrendPoint {
@@ -59,44 +62,47 @@ public class TrendChartView extends View {
 
     private void init() {
         float d = getResources().getDisplayMetrics().density;
+        Context ctx = getContext();
+        int onColor = OmniaTheme.color(ctx, R.color.omnia_chart_on);
+        int offColor = OmniaTheme.color(ctx, R.color.omnia_chart_off);
 
         gridPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        gridPaint.setColor(Color.parseColor("#1B2D4B"));
+        gridPaint.setColor(OmniaTheme.color(ctx, R.color.omnia_chart_grid));
         gridPaint.setStrokeWidth(1.0f * d);
 
         axisPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        axisPaint.setColor(Color.parseColor("#64748B"));
+        axisPaint.setColor(OmniaTheme.color(ctx, R.color.omnia_text_muted));
         axisPaint.setTextSize(9.5f * d);
         axisPaint.setTypeface(Typeface.MONOSPACE);
 
         onGlowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        onGlowPaint.setColor(Color.parseColor("#33FF4D6D"));
+        onGlowPaint.setColor(OmniaTheme.withAlpha(onColor, 0x2E));
 
         onBarPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        onBarPaint.setColor(Color.parseColor("#FF4D6D"));
+        onBarPaint.setColor(onColor);
 
         offGlowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        offGlowPaint.setColor(Color.parseColor("#3338BDF8"));
+        offGlowPaint.setColor(OmniaTheme.withAlpha(offColor, 0x2E));
 
         offBarPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        offBarPaint.setColor(Color.parseColor("#38BDF8"));
+        offBarPaint.setColor(offColor);
 
         valuePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        valuePaint.setColor(Color.parseColor("#E2E8F0"));
+        valuePaint.setColor(OmniaTheme.color(ctx, R.color.omnia_text_primary));
         valuePaint.setTextSize(8.5f * d);
         valuePaint.setTypeface(Typeface.MONOSPACE);
         valuePaint.setTextAlign(Paint.Align.CENTER);
 
         labelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        labelPaint.setColor(Color.parseColor("#94A3B8"));
-        labelPaint.setTextSize(9.5f * d);
-        labelPaint.setTypeface(Typeface.MONOSPACE);
+        labelPaint.setColor(OmniaTheme.color(ctx, R.color.omnia_text_secondary));
+        labelPaint.setTextSize(10f * d);
+        labelPaint.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
         labelPaint.setTextAlign(Paint.Align.CENTER);
 
         mixedPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mixedPaint.setColor(Color.parseColor("#FBBF24"));
-        mixedPaint.setTextSize(9.5f * d);
-        mixedPaint.setTypeface(Typeface.MONOSPACE);
+        mixedPaint.setColor(OmniaTheme.color(ctx, R.color.omnia_warn_text));
+        mixedPaint.setTextSize(10f * d);
+        mixedPaint.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
         mixedPaint.setTextAlign(Paint.Align.CENTER);
     }
 
@@ -133,7 +139,7 @@ public class TrendChartView extends View {
 
         if (points.isEmpty()) {
             labelPaint.setTextAlign(Paint.Align.CENTER);
-            canvas.drawText("Aguardando primeiros ciclos para gerar curva.", w / 2f, h / 2f, labelPaint);
+            canvas.drawText("Sem ciclos para exibir tendência.", w / 2f, h / 2f, labelPaint);
             return;
         }
 

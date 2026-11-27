@@ -53,6 +53,8 @@ public class AnalyticsEngine {
         public List<CycleData> trendCycles;
         public String sentinelSeverity = "OK";
         public String sentinelSummary = "";
+        public TweaksAudit.TweaksStatus tweaksStatus;
+        public RebootDriftTracker.DriftReport driftReport;
     }
 
     public static String getDeviceHeaderSubtitle() {
@@ -83,6 +85,8 @@ public class AnalyticsEngine {
         List<CycleData> cycles = CycleData.loadAllCycles();
         AnalysisResult res = new AnalysisResult();
 
+        res.tweaksStatus = TweaksAudit.inspect(context);
+        res.driftReport = RebootDriftTracker.checkAndUpdate(context);
         buildHardwareTelemetry(context, res);
         buildAuditAndScore(context, res);
 
@@ -179,6 +183,15 @@ public class AnalyticsEngine {
 
         if (current.topWakelocksSummary != null && !current.topWakelocksSummary.isEmpty()) {
             curSb.append("\nWakelocks: ").append(current.topWakelocksSummary);
+        }
+        if (current.wifiMulticastSeconds >= 300) {
+            curSb.append("\nWi-Fi Multicast Lock: ").append(formatDuration(current.wifiMulticastSeconds));
+        }
+        if (current.topWakeupReason != null && !current.topWakeupReason.isEmpty()) {
+            curSb.append("\nTop Wakeup: ").append(current.topWakeupReason);
+        }
+        if (current.silentFgDaemonsSummary != null && !current.silentFgDaemonsSummary.isEmpty()) {
+            curSb.append("\nDaemon Fg Silencioso: ").append(current.silentFgDaemonsSummary);
         }
 
         res.currentSummary = curSb.toString();
@@ -295,6 +308,16 @@ public class AnalyticsEngine {
                   .append(current.integrityReason != null && !current.integrityReason.isEmpty() ? current.integrityReason : "recarga parcial ou reinício")
                   .append("). Evite comparar diretamente com ciclos limpos.\n\n");
         }
+        if (res.driftReport != null && res.driftReport.hasDrift()) {
+            causes.append("🔄 DRIFT PÓS-REBOOT DETECTADO (")
+                  .append(res.driftReport.items.size())
+                  .append(" ajuste(s) resetado(s)):\n")
+                  .append(res.driftReport.formatSummary())
+                  .append("\n   ↳ Reaplique com 1 toque na aba ⚙️ OTIM.\n\n");
+        }
+        if (res.tweaksStatus != null && !res.tweaksStatus.causalWarning.isEmpty()) {
+            causes.append(res.tweaksStatus.causalWarning);
+        }
         if (current.weakSignalSeconds > 1800 || current.mobileRadioMah > 180 || current.mobile5gSeconds > 1200) {
             int weakMin = (int) (current.weakSignalSeconds / 60);
             int m5gMin = (int) (current.mobile5gSeconds / 60);
@@ -324,6 +347,8 @@ public class AnalyticsEngine {
             causes.append("\n\n");
         }
         if (current.deepSleepPercent < 60.0 || current.rateOffMahH > 130.0 || current.screenDozeDischargeMah > 80.0 ||
+                current.wifiMulticastSeconds >= 1800 ||
+                (current.silentFgDaemonsSummary != null && !current.silentFgDaemonsSummary.isEmpty()) ||
                 (current.topWakelocksSummary != null && !current.topWakelocksSummary.isEmpty())) {
             causes.append(String.format(Locale.US, "💤 RAIO-X DO REPOUSO: Sono profundo em %.1f%% (%.0f mAh/h apagada).",
                     current.deepSleepPercent, current.rateOffMahH));
@@ -339,6 +364,19 @@ public class AnalyticsEngine {
             }
             if (current.topWakelocksSummary != null && !current.topWakelocksSummary.isEmpty()) {
                 causes.append("\n   • Principais locks: ").append(current.topWakelocksSummary);
+            } else if (current.wakelockSeconds > 1800) {
+                causes.append("\n   • Partial wakelocks totais: ").append(formatDuration(current.wakelockSeconds));
+            }
+            if (current.wifiMulticastSeconds >= 1800) {
+                causes.append("\n   • Wi-Fi Multicast Lock: ").append(formatDuration(current.wifiMulticastSeconds))
+                      .append(" (tráfego mDNS/mcast na rede mantendo RX ativo)");
+            }
+            if (current.topWakeupReason != null && !current.topWakeupReason.isEmpty()) {
+                causes.append("\n   • Principal Wakeup do kernel: ").append(current.topWakeupReason);
+            }
+            if (current.silentFgDaemonsSummary != null && !current.silentFgDaemonsSummary.isEmpty()) {
+                causes.append("\n   • Daemon 'fg' sem tela: ").append(current.silentFgDaemonsSummary)
+                      .append(" (avalie restringir na aba OTIM)");
             }
             causes.append("\n\n");
         }
@@ -455,14 +493,23 @@ public class AnalyticsEngine {
         } catch (Throwable ignored) {}
 
         DumpHelper.BatteryHealthInfo health = DumpHelper.readLiveBatteryHealth(context);
-        if (health.asocPercent > 0 && health.cyclesCount > 0) {
-            right.append(String.format(Locale.US, "ASOC %d%% · %.1f ciclos", health.asocPercent, health.cyclesCount));
-        } else if (health.asocPercent > 0) {
-            right.append(String.format(Locale.US, "Saúde ASOC: %d%%", health.asocPercent));
+        ShizukuBridge.ChemicalBatteryCache chem = res.tweaksStatus != null ? res.tweaksStatus.chemHealth : null;
+        int effectiveAsoc = health.asocPercent > 0 ? health.asocPercent
+                : (chem != null && chem.asoc > 0 ? (int) Math.round(chem.asoc) : -1);
+        double effectiveCycles = health.cyclesCount > 0 ? health.cyclesCount
+                : (chem != null && chem.cycles > 0 ? chem.cycles : -1);
+
+        if (effectiveAsoc > 0 && effectiveCycles > 0) {
+            right.append(String.format(Locale.US, "ASOC %d%% · %.1f ciclos", effectiveAsoc, effectiveCycles));
+        } else if (effectiveAsoc > 0) {
+            right.append(String.format(Locale.US, "Saúde ASOC: %d%%", effectiveAsoc));
         } else if (health.chargeCounterMah > 0) {
             right.append(String.format(Locale.US, "Carga Real: %d mAh", health.chargeCounterMah));
         } else {
             right.append("Saúde: N/A");
+        }
+        if (chem != null && !chem.firstUseDate.isEmpty()) {
+            full.append("1º Uso Bateria: ").append(TweaksAudit.formatFirstUseDate(chem.firstUseDate)).append("\n");
         }
         res.hardwareTileRight = right.toString().trim();
 
@@ -479,7 +526,7 @@ public class AnalyticsEngine {
         res.hardwareSummary = full.toString().trim();
     }
 
-    private static String getSystemProp(String key, String def) {
+    public static String getSystemProp(String key, String def) {
         try {
             Class<?> sp = Class.forName("android.os.SystemProperties");
             Method get = sp.getMethod("get", String.class, String.class);
@@ -542,16 +589,20 @@ public class AnalyticsEngine {
 
         String aod = safeSystem(cr, "aod_mode");
         String aodNoti = safeSystem(cr, "aod_show_for_new_noti");
+        String aodTap = safeSystem(cr, "aod_tap_to_show_mode");
         if (aod != null) {
             total++;
             if ("0".equals(aod)) {
                 passed++;
                 audit.append("✅ Always-On Display: Desativado\n");
+            } else if ("1".equals(aodTap)) {
+                passed++;
+                audit.append("✅ AOD: Toque para exibir (~18,6 mAh/ciclo)\n");
             } else if ("1".equals(aodNoti)) {
                 passed++;
                 audit.append("ℹ️ AOD: Apenas para novas notificações\n");
             } else {
-                audit.append("⚠️ AOD: Sempre ativo (~0,5-1%/h)\n");
+                audit.append("⚠️ AOD: Sempre ativo (considere 'Toque para exibir')\n");
             }
         }
 
@@ -652,19 +703,23 @@ public class AnalyticsEngine {
             audit.append("⚠️ Bateria do Omnia: Coloque em 'Não restrita'");
         }
 
+        if (res.tweaksStatus != null && !res.tweaksStatus.summaryLines.isEmpty()) {
+            audit.append("\n\n--- HARDWARE & TWEAKS ---\n").append(res.tweaksStatus.summaryLines);
+        }
+
         res.settingsScorePct = total > 0 ? Math.round(100f * passed / total) : 80;
         res.auditReport = audit.toString().trim();
     }
 
-    private static String safeGlobal(ContentResolver cr, String key) {
+    public static String safeGlobal(ContentResolver cr, String key) {
         try { return Settings.Global.getString(cr, key); } catch (Throwable ignored) { return null; }
     }
 
-    private static String safeSystem(ContentResolver cr, String key) {
+    public static String safeSystem(ContentResolver cr, String key) {
         try { return Settings.System.getString(cr, key); } catch (Throwable ignored) { return null; }
     }
 
-    private static String safeSecure(ContentResolver cr, String key) {
+    public static String safeSecure(ContentResolver cr, String key) {
         try { return Settings.Secure.getString(cr, key); } catch (Throwable ignored) { return null; }
     }
 
@@ -691,7 +746,7 @@ public class AnalyticsEngine {
         }
     }
 
-    private static String formatDuration(double seconds) {
+    public static String formatDuration(double seconds) {
         int totalMins = (int) Math.round(Math.max(0, seconds) / 60.0);
         int h = totalMins / 60;
         int m = totalMins % 60;

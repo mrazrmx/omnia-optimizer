@@ -440,7 +440,7 @@ public final class PerfMonitor {
 
         sb.append("Corrente / Potenc.: ");
         if (rawCurrent != Long.MIN_VALUE && rawCurrent != 0L) {
-            double ma = Math.abs(rawCurrent) > 25000L ? (rawCurrent / 1000.0) : rawCurrent;
+            double ma = normalizeCurrentMa(rawCurrent);
             if (voltageMv > 0) {
                 double watts = (voltageMv / 1000.0) * (ma / 1000.0);
                 sb.append(String.format(Locale.US, "%+.0f mA (%+.2f W)", ma, watts));
@@ -454,6 +454,11 @@ public final class PerfMonitor {
         }
 
         return sb.toString().trim();
+    }
+
+    /** Samsung One UI geralmente retorna mA enquanto AOSP retorna uA (&gt; 25000). */
+    public static double normalizeCurrentMa(long rawCurrent) {
+        return Math.abs(rawCurrent) > 25000L ? (rawCurrent / 1000.0) : rawCurrent;
     }
 
     private static synchronized String discoverDdrDevfreqPath() {

@@ -3,4 +3,6 @@
     <string name="app_name">Omnia Optimizer</string>
     <string name="status_title">Omnia Optimizer · Galaxy Edition</string>
     <string name="status_desc">Central de eficiência de bateria, telemetria sob demanda e Sentinela Anti-Wakelock (0% em 2º plano).</string>
+    <string name="widget_name">Omnia HUD</string>
+    <string name="widget_description">Painel Cyber-HUD de bateria, último ciclo limpo e Sentinela Anti-Wakelock (0% de consumo em segundo plano).</string>
 </resources>

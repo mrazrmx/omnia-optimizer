@@ -64,6 +64,9 @@ public class CycleData {
     public int chargeCounterMah = -1;
     public String sentinelSeverity = "OK";
     public String sentinelSummary = "";
+    public double wifiMulticastSeconds = 0;
+    public String topWakeupReason = "";
+    public String silentFgDaemonsSummary = "";
 
     public boolean isMixedWindow() {
         return "MISTO".equalsIgnoreCase(integrityStatus) || systemStarts > 0 || hasPartialRecharge;
@@ -118,6 +121,9 @@ public class CycleData {
             json.put("chargeCounterMah", chargeCounterMah);
             json.put("sentinelSeverity", sentinelSeverity);
             json.put("sentinelSummary", sentinelSummary);
+            json.put("wifiMulticastSeconds", wifiMulticastSeconds);
+            json.put("topWakeupReason", topWakeupReason);
+            json.put("silentFgDaemonsSummary", silentFgDaemonsSummary);
         } catch (Exception ignored) {}
         return json;
     }
@@ -171,6 +177,9 @@ public class CycleData {
             d.chargeCounterMah = json.optInt("chargeCounterMah", -1);
             d.sentinelSeverity = json.optString("sentinelSeverity", "OK");
             d.sentinelSummary = json.optString("sentinelSummary", "");
+            d.wifiMulticastSeconds = json.optDouble("wifiMulticastSeconds", 0);
+            d.topWakeupReason = json.optString("topWakeupReason", "");
+            d.silentFgDaemonsSummary = json.optString("silentFgDaemonsSummary", "");
         } catch (Exception ignored) {}
         return d;
     }

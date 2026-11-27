@@ -3,118 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#060911"
-    android:fitsSystemWindows="true">
+    android:background="@color/omnia_bg">
 
-    <!-- Persistent Cyber-HUD Top Header -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/bg_hud_header"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="8dp"
-        android:padding="12dp"
-        android:gravity="center_horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="OMNIA OPTIMIZER"
-            android:fontFamily="monospace"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.16"
-            android:textColor="#F8FAFC" />
-
-        <TextView
-            android:id="@+id/tvDeviceSubtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="GALAXY · ONE UI"
-            android:fontFamily="monospace"
-            android:textSize="10sp"
-            android:letterSpacing="0.10"
-            android:textColor="#60A5FA"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="6dp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/badgeProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="LEVE: ON"
-                android:fontFamily="monospace"
-                android:textSize="9.5sp"
-                android:textStyle="bold"
-                android:singleLine="true"
-                android:textColor="#93C5FD"
-                android:background="@drawable/bg_pill_blue"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
-                android:layout_marginEnd="5dp" />
-
-            <TextView
-                android:id="@+id/badgeExtraDim"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="BRILHO-: ON"
-                android:fontFamily="monospace"
-                android:textSize="9.5sp"
-                android:textStyle="bold"
-                android:singleLine="true"
-                android:textColor="#93C5FD"
-                android:background="@drawable/bg_pill_blue"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
-                android:layout_marginEnd="5dp" />
-
-            <TextView
-                android:id="@+id/badgeRenderer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="HWUI · AUTO ON"
-                android:fontFamily="monospace"
-                android:textSize="9.5sp"
-                android:textStyle="bold"
-                android:singleLine="true"
-                android:textColor="#6EE7B7"
-                android:background="@drawable/bg_pill_green"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <!-- Scrollable Tab Viewport -->
+    <!-- Scrollable Main Viewport (retractable hero lives inside Início tab) -->
     <ScrollView
         android:id="@+id/mainScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:clipToPadding="false"
         android:scrollbars="none">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="12dp">
+            android:paddingTop="12dp"
+            android:paddingBottom="16dp">
 
-            <!-- TAB 1: HUD -->
+            <!-- ==================== TAB 1: INÍCIO (Material 3 / One UI HUD) ==================== -->
             <LinearLayout
                 android:id="@+id/tabHud"
                 android:layout_width="match_parent"
@@ -122,55 +30,148 @@
                 android:orientation="vertical"
                 android:visibility="visible">
 
+                <!-- Hero Header Card (Scrolls with content so extra space is saved elsewhere) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_hud_header"
+                    android:padding="16dp"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/status_title"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/omnia_text_primary"
+                        android:layout_marginBottom="2dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/status_desc"
+                        android:id="@+id/tvDeviceSubtitle"
+                        android:textSize="12.5sp"
+                        android:textColor="@color/omnia_text_secondary"
+                        android:layout_marginBottom="10dp" />
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/badgeProfile"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="LEVE: ON"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:singleLine="true"
+                                android:textColor="@color/omnia_info_text"
+                                android:background="@drawable/bg_pill_blue"
+                                android:paddingStart="10dp"
+                                android:paddingEnd="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingBottom="4dp"
+                                android:layout_marginEnd="6dp" />
+
+                            <TextView
+                                android:id="@+id/badgeExtraDim"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="BRILHO-: ON"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:singleLine="true"
+                                android:textColor="@color/omnia_info_text"
+                                android:background="@drawable/bg_pill_blue"
+                                android:paddingStart="10dp"
+                                android:paddingEnd="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingBottom="4dp"
+                                android:layout_marginEnd="6dp" />
+
+                            <TextView
+                                android:id="@+id/badgeRenderer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="VULKAN · AUTO ON"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:singleLine="true"
+                                android:textColor="@color/omnia_ok_text"
+                                android:background="@drawable/bg_pill_green"
+                                android:paddingStart="10dp"
+                                android:paddingEnd="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingBottom="4dp" />
+                        </LinearLayout>
+                    </HorizontalScrollView>
+                </LinearLayout>
+
+                <!-- Radar Panel + Quick Primary Actions -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/bg_hud_card"
-                    android:padding="14dp"
-                    android:layout_marginBottom="10dp">
+                    android:padding="16dp"
+                    android:layout_marginBottom="12dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="CURRENT EFFICIENCY SUMMARY:"
-                        android:fontFamily="monospace"
-                        android:textSize="11.5sp"
-                        android:letterSpacing="0.12"
-                        android:textColor="#CBD5E1"
-                        android:layout_marginBottom="2dp" />
+                        android:text="Eficiência do Ciclo Atual"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/omnia_text_primary"
+                        android:layout_marginBottom="4dp" />
 
                     <com.omnia.optimizer.RadarChartView
                         android:id="@+id/radarChart"
                         android:layout_width="match_parent"
-                        android:layout_height="245dp" />
+                        android:layout_height="236dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center"
-                        android:layout_marginBottom="12dp">
+                        android:layout_marginBottom="14dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="● CICLO ATUAL"
-                            android:fontFamily="monospace"
-                            android:textSize="10sp"
+                            android:text="● Ciclo Atual"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="11.5sp"
                             android:textStyle="bold"
-                            android:textColor="#FF4D6D"
-                            android:layout_marginEnd="14dp" />
+                            android:textColor="@color/omnia_chart_on"
+                            android:layout_marginEnd="16dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="● MÉDIA 7 CICLOS"
-                            android:fontFamily="monospace"
-                            android:textSize="10sp"
+                            android:text="● Média 7 Ciclos"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="11.5sp"
                             android:textStyle="bold"
-                            android:textColor="#60A5FA" />
+                            android:textColor="@color/omnia_primary" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -181,80 +182,170 @@
                         <Button
                             android:id="@+id/btnCollectNow"
                             android:layout_width="0dp"
-                            android:layout_height="44dp"
+                            android:layout_height="48dp"
                             android:layout_weight="1"
-                            android:text="⚡ LER AGORA"
-                            android:fontFamily="monospace"
+                            android:text="Ler Agora"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
                             android:textStyle="bold"
-                            android:textSize="12sp"
-                            android:textColor="#FFE4E6"
+                            android:textSize="13.5sp"
+                            android:textColor="@color/omnia_alert_text"
                             android:background="@drawable/bg_pill_red"
                             android:layout_marginEnd="8dp" />
 
                         <Button
                             android:id="@+id/btnQuickBackup"
                             android:layout_width="0dp"
-                            android:layout_height="44dp"
+                            android:layout_height="48dp"
                             android:layout_weight="1"
-                            android:text="☁️ BACKUP DRIVE"
-                            android:fontFamily="monospace"
+                            android:text="Backup Drive"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
                             android:textStyle="bold"
-                            android:textSize="12sp"
-                            android:textColor="#DBEAFE"
+                            android:textSize="13.5sp"
+                            android:textColor="@color/omnia_info_text"
                             android:background="@drawable/bg_pill_blue" />
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Sentinela Anti-Wakelock -->
+                <!-- Sentinela Anti-Wakelock (On-Demand + Collapsible Report) -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/bg_hud_card"
-                    android:padding="12dp"
-                    android:layout_marginBottom="10dp">
+                    android:padding="15dp"
+                    android:layout_marginBottom="12dp">
 
-                    <TextView
-                        android:id="@+id/tvSentinelTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="SENTINELA ANTI-WAKELOCK · SOB DEMANDA"
-                        android:fontFamily="monospace"
-                        android:textSize="10.5sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.08"
-                        android:textColor="#FBBF24"
-                        android:layout_marginBottom="6dp" />
-
-                    <Button
-                        android:id="@+id/btnHuntWakelocks"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:text="🕵️ CAÇAR LADRÃO DE BATERIA AGORA"
-                        android:fontFamily="monospace"
-                        android:textStyle="bold"
-                        android:textSize="11.5sp"
-                        android:textColor="#FCD34D"
-                        android:background="@drawable/bg_pill_dark"
-                        android:layout_marginBottom="8dp" />
-
-                    <TextView
-                        android:id="@+id/tvSentinelReport"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:textSize="10.5sp"
-                        android:textColor="#CBD5E1"
-                        android:lineSpacingExtra="2dp"
-                        android:text="Aguardando verificação (0% em 2º plano)." />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:id="@+id/tvSentinelTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Sentinela Anti-Wakelock · Sob demanda"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/omnia_warn_text" />
+
+                        <ImageView
+                            android:id="@+id/btnToggleSentinelDetails"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:padding="6dp"
+                            android:src="@drawable/ic_chevron_up"
+                            android:tint="@color/omnia_text_secondary"
+                            android:contentDescription="Expandir detalhes do sentinela" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <Button
+                            android:id="@+id/btnHuntWakelocks"
+                            android:layout_width="0dp"
+                            android:layout_height="44dp"
+                            android:layout_weight="1.25"
+                            android:text="Caçar Ladrão"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
+                            android:textStyle="bold"
+                            android:textSize="12.5sp"
+                            android:textColor="@color/omnia_warn_text"
+                            android:background="@drawable/bg_pill_amber"
+                            android:layout_marginEnd="8dp" />
+
+                        <Button
+                            android:id="@+id/btnCleanDozeWhitelist"
+                            android:layout_width="0dp"
+                            android:layout_height="44dp"
+                            android:layout_weight="1"
+                            android:text="Doze Whitelist"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
+                            android:textStyle="bold"
+                            android:textSize="12.5sp"
+                            android:textColor="@color/omnia_info_text"
+                            android:background="@drawable/bg_pill_dark" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutSentinelDetails"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <TextView
+                            android:id="@+id/tvSentinelReport"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
+                            android:textSize="12.5sp"
+                            android:textColor="@color/omnia_text_secondary"
+                            android:lineSpacingExtra="3dp"
+                            android:text="Aguardando verificação sob demanda (0% em 2º plano)." />
+
+                        <LinearLayout
+                            android:id="@+id/layoutSentinelActions"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="10dp"
+                            android:visibility="gone">
+
+                            <Button
+                                android:id="@+id/btnHuntControl"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1.2"
+                                android:text="Controlar Vilão"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="bold"
+                                android:textSize="12sp"
+                                android:textColor="@color/omnia_alert_text"
+                                android:background="@drawable/bg_pill_red"
+                                android:layout_marginEnd="8dp" />
+
+                            <Button
+                                android:id="@+id/btnHuntUndo"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="0.9"
+                                android:text="Desfazer"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="12sp"
+                                android:textColor="@color/omnia_info_text"
+                                android:background="@drawable/bg_pill_dark"
+                                android:visibility="gone" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
 
-                <!-- Split 2-Column Hardware & Thermal Tiles -->
+                <!-- Split 2-Column Hardware & Thermal Snapshot -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginBottom="12dp">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -262,28 +353,27 @@
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:background="@drawable/bg_hud_card"
-                        android:padding="11dp"
-                        android:layout_marginEnd="5dp">
+                        android:padding="14dp"
+                        android:layout_marginEnd="6dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="CPU &amp; MEMÓRIA"
-                            android:fontFamily="monospace"
-                            android:textSize="10.5sp"
+                            android:text="CPU &amp; Memória"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="12.5sp"
                             android:textStyle="bold"
-                            android:letterSpacing="0.08"
-                            android:textColor="#60A5FA"
-                            android:layout_marginBottom="4dp" />
+                            android:textColor="@color/omnia_primary"
+                            android:layout_marginBottom="6dp" />
 
                         <TextView
                             android:id="@+id/tvHardwareTileLeft"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="monospace"
-                            android:textSize="11sp"
-                            android:textColor="#E2E8F0"
-                            android:lineSpacingExtra="2dp"
+                            android:textSize="11.5sp"
+                            android:textColor="@color/omnia_text_primary"
+                            android:lineSpacingExtra="3dp"
                             android:text="..." />
                     </LinearLayout>
 
@@ -293,63 +383,592 @@
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:background="@drawable/bg_hud_card"
-                        android:padding="11dp"
-                        android:layout_marginStart="5dp">
+                        android:padding="14dp"
+                        android:layout_marginStart="6dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="TÉRMICA &amp; BATERIA"
-                            android:fontFamily="monospace"
-                            android:textSize="10.5sp"
+                            android:text="Térmica &amp; Bateria"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="12.5sp"
                             android:textStyle="bold"
-                            android:letterSpacing="0.08"
-                            android:textColor="#FF4D6D"
-                            android:layout_marginBottom="4dp" />
+                            android:textColor="@color/omnia_chart_on"
+                            android:layout_marginBottom="6dp" />
 
                         <TextView
                             android:id="@+id/tvHardwareTileRight"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="monospace"
-                            android:textSize="11sp"
-                            android:textColor="#E2E8F0"
-                            android:lineSpacingExtra="2dp"
+                            android:textSize="11.5sp"
+                            android:textColor="@color/omnia_text_primary"
+                            android:lineSpacingExtra="3dp"
                             android:text="..." />
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Latest Cycle Summary -->
+                <!-- Latest Cycle Telemetry -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/bg_hud_card"
-                    android:padding="13dp">
+                    android:padding="15dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TELEMETRIA DO ÚLTIMO CICLO"
-                        android:fontFamily="monospace"
-                        android:textSize="11sp"
+                        android:text="Telemetria do Último Ciclo"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="13sp"
                         android:textStyle="bold"
-                        android:letterSpacing="0.1"
-                        android:textColor="#34D399"
+                        android:textColor="@color/omnia_ok_text"
                         android:layout_marginBottom="6dp" />
 
                     <TextView
                         android:id="@+id/tvCurrentSummary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="12.5sp"
-                        android:textColor="#E2E8F0"
-                        android:lineSpacingExtra="3dp"
+                        android:textSize="13sp"
+                        android:textColor="@color/omnia_text_primary"
+                        android:lineSpacingExtra="4dp"
                         android:text="Carregando..." />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- TAB 2: DIAG -->
+            <!-- ==================== TAB 2: SISTEMA (CPU | RAM MemHogs | ADB Shell) ==================== -->
+            <LinearLayout
+                android:id="@+id/tabPerf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sistema &amp; Ferramentas"
+                    android:fontFamily="sans-serif-medium"
+                    android:textSize="19sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/omnia_text_primary"
+                    android:layout_marginBottom="2dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Inspeção sob demanda de CPU, RAM real e console ADB local"
+                    android:textSize="12sp"
+                    android:textColor="@color/omnia_text_secondary"
+                    android:layout_marginBottom="10dp" />
+
+                <!-- 3-Way M3 Segmented Control -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/bg_segmented_track"
+                    android:padding="4dp"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:id="@+id/segSysCpu"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="CPU &amp; Energia"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="12.5sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/bg_segmented_active"
+                        android:textColor="@color/omnia_on_primary_container" />
+
+                    <TextView
+                        android:id="@+id/segSysRam"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="RAM (MemHogs)"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="12.5sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/omnia_text_secondary" />
+
+                    <TextView
+                        android:id="@+id/segSysShell"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="ADB Shell"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="12.5sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/omnia_text_secondary" />
+                </LinearLayout>
+
+                <!-- SUB-TAB A: CPU & ENERGIA (M3 Cards) -->
+                <LinearLayout
+                    android:id="@+id/subPerfCpu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_hud_card"
+                        android:padding="14dp"
+                        android:layout_marginBottom="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Telemetria de Hardware · Ao Vivo"
+                            android:fontFamily="sans-serif-medium"
+                            android:textStyle="bold"
+                            android:textSize="13sp"
+                            android:textColor="@color/omnia_primary"
+                            android:layout_marginBottom="2dp" />
+
+                        <TextView
+                            android:id="@+id/tvPerfStatus"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Ativa apenas enquanto esta sub-aba está visível (0% em 2º plano)"
+                            android:textSize="12sp"
+                            android:textColor="@color/omnia_ok_text" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_hud_card"
+                        android:padding="14dp"
+                        android:layout_marginBottom="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Processador · Clock por Núcleo"
+                            android:fontFamily="sans-serif-medium"
+                            android:textStyle="bold"
+                            android:textSize="13sp"
+                            android:textColor="@color/omnia_primary"
+                            android:layout_marginBottom="6dp" />
+
+                        <TextView
+                            android:id="@+id/tvPerfCpu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="monospace"
+                            android:textSize="11.5sp"
+                            android:textColor="@color/omnia_text_primary"
+                            android:lineSpacingExtra="3dp"
+                            android:text="Lendo núcleos..." />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_hud_card"
+                        android:padding="14dp"
+                        android:layout_marginBottom="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Sensores Térmicos · CPU / Memória / Bateria"
+                            android:fontFamily="sans-serif-medium"
+                            android:textStyle="bold"
+                            android:textSize="13sp"
+                            android:textColor="@color/omnia_alert_text"
+                            android:layout_marginBottom="6dp" />
+
+                        <TextView
+                            android:id="@+id/tvPerfThermals"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="monospace"
+                            android:textSize="11.5sp"
+                            android:textColor="@color/omnia_text_primary"
+                            android:lineSpacingExtra="3dp"
+                            android:text="Lendo sensores..." />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_hud_card"
+                        android:padding="14dp"
+                        android:layout_marginBottom="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Memória RAM &amp; Barramento DDR"
+                            android:fontFamily="sans-serif-medium"
+                            android:textStyle="bold"
+                            android:textSize="13sp"
+                            android:textColor="@color/omnia_ok_text"
+                            android:layout_marginBottom="6dp" />
+
+                        <TextView
+                            android:id="@+id/tvPerfMemory"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="monospace"
+                            android:textSize="11.5sp"
+                            android:textColor="@color/omnia_text_primary"
+                            android:lineSpacingExtra="3dp"
+                            android:text="Lendo memória..." />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_hud_card"
+                        android:padding="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="GPU &amp; Energia Instantânea"
+                            android:fontFamily="sans-serif-medium"
+                            android:textStyle="bold"
+                            android:textSize="13sp"
+                            android:textColor="@color/omnia_info_text"
+                            android:layout_marginBottom="6dp" />
+
+                        <TextView
+                            android:id="@+id/tvPerfGpuPower"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="monospace"
+                            android:textSize="11.5sp"
+                            android:textColor="@color/omnia_text_primary"
+                            android:lineSpacingExtra="3dp"
+                            android:text="Lendo energia..." />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- SUB-TAB B: RAM MEMHOGS (Technical Charcoal Mode) -->
+                <LinearLayout
+                    android:id="@+id/subPerfRam"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_charcoal_card"
+                    android:padding="14dp"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="MEMHOGS · CONSUMO POR APP"
+                                android:fontFamily="monospace"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/omnia_charcoal_amber" />
+
+                            <TextView
+                                android:id="@+id/tvMemGaugeMain"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="-- / --"
+                                android:fontFamily="monospace"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/omnia_charcoal_text"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+
+                        <Button
+                            android:id="@+id/btnMemRefresh"
+                            android:layout_width="wrap_content"
+                            android:layout_height="38dp"
+                            android:text="Atualizar"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/omnia_charcoal_cyan"
+                            android:background="@drawable/bg_charcoal_cell"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="14dp" />
+                    </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/progressMemBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="6dp"
+                        android:max="1000"
+                        android:progress="0"
+                        android:layout_marginBottom="8dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:id="@+id/tvMemGaugeSub"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="monospace"
+                            android:textSize="11sp"
+                            android:textColor="@color/omnia_charcoal_dim"
+                            android:text="Aguardando captura..." />
+
+                        <Switch
+                            android:id="@+id/switchMemLive"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ao vivo (2.5s) "
+                            android:textSize="11.5sp"
+                            android:textColor="@color/omnia_charcoal_text"
+                            android:checked="false" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvMemStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/omnia_charcoal_amber"
+                        android:layout_marginBottom="8dp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tvMemReclaimBanner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="12.5sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/bg_charcoal_cell"
+                        android:padding="10dp"
+                        android:layout_marginBottom="8dp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Toque em um app para expandir os PIDs individuais e renderers isolados."
+                        android:textSize="11.5sp"
+                        android:textColor="@color/omnia_charcoal_dim"
+                        android:layout_marginBottom="8dp" />
+
+                    <LinearLayout
+                        android:id="@+id/memHogsListContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </LinearLayout>
+
+                <!-- SUB-TAB C: ADB SHELL LOCAL (Technical Charcoal Mode) -->
+                <LinearLayout
+                    android:id="@+id/subPerfShell"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_charcoal_card"
+                    android:padding="14dp"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="ADB SHELL LOCAL · SHIZUKU"
+                            android:fontFamily="monospace"
+                            android:textSize="11.5sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/omnia_charcoal_green" />
+
+                        <TextView
+                            android:id="@+id/tvShellCwd"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="monospace"
+                            android:textSize="10.5sp"
+                            android:textColor="@color/omnia_charcoal_dim"
+                            android:text="cwd: /storage/emulated/0" />
+                    </LinearLayout>
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none"
+                        android:layout_marginBottom="10dp">
+
+                        <LinearLayout
+                            android:id="@+id/layoutShellChips"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" />
+                    </HorizontalScrollView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <EditText
+                            android:id="@+id/etShellInput"
+                            android:layout_width="0dp"
+                            android:layout_height="46dp"
+                            android:layout_weight="1"
+                            android:hint="Ex: dumpsys battery"
+                            android:singleLine="true"
+                            android:imeOptions="actionSend"
+                            android:inputType="textNoSuggestions"
+                            android:fontFamily="monospace"
+                            android:textSize="13sp"
+                            android:textColor="@color/omnia_charcoal_text"
+                            android:textColorHint="@color/omnia_charcoal_dim"
+                            android:background="@drawable/bg_input_charcoal"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
+                            android:layout_marginEnd="8dp" />
+
+                        <Button
+                            android:id="@+id/btnShellRunStop"
+                            android:layout_width="wrap_content"
+                            android:layout_height="46dp"
+                            android:text="Executar"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="12.5sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/omnia_charcoal_cyan"
+                            android:background="@drawable/bg_charcoal_cell"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="14dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:id="@+id/tvShellStatus"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="monospace"
+                            android:textSize="10.5sp"
+                            android:textColor="@color/omnia_charcoal_dim"
+                            android:text="Pronto · 0% em segundo plano" />
+
+                        <Button
+                            android:id="@+id/btnShellCopy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="34dp"
+                            android:text="Copiar"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="11sp"
+                            android:textColor="@color/omnia_charcoal_text"
+                            android:background="@drawable/bg_charcoal_cell"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:layout_marginEnd="6dp" />
+
+                        <Button
+                            android:id="@+id/btnShellSave"
+                            android:layout_width="wrap_content"
+                            android:layout_height="34dp"
+                            android:text="Salvar"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="11sp"
+                            android:textColor="@color/omnia_charcoal_green"
+                            android:background="@drawable/bg_charcoal_cell"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:layout_marginEnd="6dp" />
+
+                        <Button
+                            android:id="@+id/btnShellClear"
+                            android:layout_width="wrap_content"
+                            android:layout_height="34dp"
+                            android:text="Limpar"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="11sp"
+                            android:textColor="@color/omnia_charcoal_amber"
+                            android:background="@drawable/bg_charcoal_cell"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp" />
+                    </LinearLayout>
+
+                    <ScrollView
+                        android:id="@+id/scrollShellOutput"
+                        android:layout_width="match_parent"
+                        android:layout_height="290dp"
+                        android:background="@drawable/bg_input_charcoal"
+                        android:padding="10dp"
+                        android:nestedScrollingEnabled="true">
+
+                        <TextView
+                            android:id="@+id/tvShellOutput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="monospace"
+                            android:textSize="11.5sp"
+                            android:textColor="@color/omnia_charcoal_text"
+                            android:lineSpacingExtra="2dp"
+                            android:textIsSelectable="true"
+                            android:text="Toque em um atalho acima ou digite um comando shell.\nPrefixos `adb shell ` são removidos automaticamente." />
+                    </ScrollView>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ==================== TAB 3: CICLOS (Tendências & Diagnóstico) ==================== -->
             <LinearLayout
                 android:id="@+id/tabDiag"
                 android:layout_width="match_parent"
@@ -357,40 +976,57 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ciclos &amp; Análise"
+                    android:fontFamily="sans-serif-medium"
+                    android:textSize="19sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/omnia_text_primary"
+                    android:layout_marginBottom="2dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Histórico separado entre janelas limpas e janelas mistas com carga"
+                    android:textSize="12sp"
+                    android:textColor="@color/omnia_text_secondary"
+                    android:layout_marginBottom="12dp" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/bg_hud_card"
-                    android:padding="14dp"
-                    android:layout_marginBottom="10dp">
+                    android:padding="15dp"
+                    android:layout_marginBottom="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="COMPARATIVO &amp; RECORDES"
-                        android:fontFamily="monospace"
-                        android:textSize="11.5sp"
+                        android:text="Comparativo &amp; Recordes"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="13.5sp"
                         android:textStyle="bold"
-                        android:letterSpacing="0.1"
-                        android:textColor="#60A5FA"
+                        android:textColor="@color/omnia_primary"
                         android:layout_marginBottom="6dp" />
 
                     <TextView
                         android:id="@+id/tvScreenComparison"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="13sp"
+                        android:textSize="14sp"
                         android:textStyle="bold"
-                        android:textColor="#F8FAFC"
+                        android:textColor="@color/omnia_text_primary"
                         android:layout_marginBottom="5dp" />
 
                     <TextView
                         android:id="@+id/tvRateComparison"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:textColor="#CBD5E1"
+                        android:textSize="12.5sp"
+                        android:textColor="@color/omnia_text_secondary"
                         android:lineSpacingExtra="3dp" />
                 </LinearLayout>
 
@@ -399,27 +1035,26 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/bg_hud_card"
-                    android:padding="14dp"
-                    android:layout_marginBottom="10dp">
+                    android:padding="15dp"
+                    android:layout_marginBottom="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="DIAGNÓSTICO CAUSAL (5 PILARES)"
-                        android:fontFamily="monospace"
-                        android:textSize="11.5sp"
+                        android:text="Diagnóstico Causal (5 Pilares)"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="13.5sp"
                         android:textStyle="bold"
-                        android:letterSpacing="0.1"
-                        android:textColor="#FB7185"
+                        android:textColor="@color/omnia_alert_text"
                         android:layout_marginBottom="6dp" />
 
                     <TextView
                         android:id="@+id/tvCausalDiagnosis"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="12.5sp"
-                        android:textColor="#E2E8F0"
-                        android:lineSpacingExtra="3dp" />
+                        android:textSize="13sp"
+                        android:textColor="@color/omnia_text_primary"
+                        android:lineSpacingExtra="4dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -427,25 +1062,24 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/bg_hud_card"
-                    android:padding="14dp"
-                    android:layout_marginBottom="10dp">
+                    android:padding="15dp"
+                    android:layout_marginBottom="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TENDÊNCIA POR CICLO (mAh/h)"
-                        android:fontFamily="monospace"
-                        android:textSize="11.5sp"
+                        android:text="Tendência por Ciclo (mAh/h)"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="13.5sp"
                         android:textStyle="bold"
-                        android:letterSpacing="0.1"
-                        android:textColor="#38BDF8"
-                        android:layout_marginBottom="4dp" />
+                        android:textColor="@color/omnia_info_text"
+                        android:layout_marginBottom="6dp" />
 
                     <com.omnia.optimizer.TrendChartView
                         android:id="@+id/trendChart"
                         android:layout_width="match_parent"
-                        android:layout_height="185dp"
-                        android:layout_marginBottom="6dp" />
+                        android:layout_height="190dp"
+                        android:layout_marginBottom="8dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -456,31 +1090,31 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="● LIGADA (mAh/h)"
-                            android:fontFamily="monospace"
-                            android:textSize="9.5sp"
+                            android:text="● Ligada (mAh/h)"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="11sp"
                             android:textStyle="bold"
-                            android:textColor="#FF4D6D"
-                            android:layout_marginEnd="10dp" />
+                            android:textColor="@color/omnia_chart_on"
+                            android:layout_marginEnd="12dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="● APAGADA (mAh/h)"
-                            android:fontFamily="monospace"
-                            android:textSize="9.5sp"
+                            android:text="● Apagada (mAh/h)"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="11sp"
                             android:textStyle="bold"
-                            android:textColor="#38BDF8"
-                            android:layout_marginEnd="10dp" />
+                            android:textColor="@color/omnia_chart_off"
+                            android:layout_marginEnd="12dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="* MISTO"
-                            android:fontFamily="monospace"
-                            android:textSize="9.5sp"
+                            android:text="* Misto"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="11sp"
                             android:textStyle="bold"
-                            android:textColor="#FBBF24" />
+                            android:textColor="@color/omnia_warn_text" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -489,31 +1123,29 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/bg_hud_card"
-                    android:padding="14dp">
+                    android:padding="15dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="HISTÓRICO DE CICLOS DELIMITADOS"
-                        android:fontFamily="monospace"
-                        android:textSize="11.5sp"
+                        android:text="Histórico de Ciclos Delimitados"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="13.5sp"
                         android:textStyle="bold"
-                        android:letterSpacing="0.1"
-                        android:textColor="#38BDF8"
+                        android:textColor="@color/omnia_primary"
                         android:layout_marginBottom="6dp" />
 
                     <TextView
                         android:id="@+id/tvHistoryList"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:textSize="11sp"
-                        android:textColor="#CBD5E1"
+                        android:textSize="12.5sp"
+                        android:textColor="@color/omnia_text_secondary"
                         android:lineSpacingExtra="4dp" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- TAB 3: OTIM (Activation + System Auditor + Checklist) -->
+            <!-- ==================== TAB 4: AJUSTES (Shizuku + 4 Accordions) ==================== -->
             <LinearLayout
                 android:id="@+id/tabAudit"
                 android:layout_width="match_parent"
@@ -521,322 +1153,126 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <!-- Permissions / ADB & Shizuku Activation Helper -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ajustes &amp; Controle"
+                    android:fontFamily="sans-serif-medium"
+                    android:textSize="19sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/omnia_text_primary"
+                    android:layout_marginBottom="2dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Shizuku sob demanda, economia reversível, tela e API Vulkan"
+                    android:textSize="12sp"
+                    android:textColor="@color/omnia_text_secondary"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Conditional Reboot Drift Alert Banner -->
+                <LinearLayout
+                    android:id="@+id/cardRebootDrift"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_pill_amber"
+                    android:padding="15dp"
+                    android:layout_marginBottom="12dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Drift Pós-Reinício Detectado"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="13.5sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/omnia_warn_text"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/tvRebootDriftDetails"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12.5sp"
+                        android:textColor="@color/omnia_text_primary"
+                        android:lineSpacingExtra="3dp"
+                        android:layout_marginBottom="10dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnFixRebootDrift"
+                            android:layout_width="0dp"
+                            android:layout_height="44dp"
+                            android:layout_weight="1.35"
+                            android:text="Reaplicar Tudo (Shizuku)"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
+                            android:textStyle="bold"
+                            android:textSize="12.5sp"
+                            android:textColor="@color/omnia_info_text"
+                            android:background="@drawable/bg_pill_blue"
+                            android:layout_marginEnd="8dp" />
+
+                        <Button
+                            android:id="@+id/btnDismissRebootDrift"
+                            android:layout_width="0dp"
+                            android:layout_height="44dp"
+                            android:layout_weight="0.85"
+                            android:text="Ignorar"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="12.5sp"
+                            android:textColor="@color/omnia_text_secondary"
+                            android:background="@drawable/bg_pill_dark" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Always-Accessible Shizuku & Permissions Hub Card -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/bg_hud_card"
-                    android:padding="14dp"
-                    android:layout_marginBottom="10dp">
+                    android:padding="15dp"
+                    android:layout_marginBottom="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ATIVAÇÃO &amp; PERMISSÕES (SHIZUKU / ADB)"
-                        android:fontFamily="monospace"
-                        android:textSize="11sp"
+                        android:text="Conexão Shizuku &amp; Permissões"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="13.5sp"
                         android:textStyle="bold"
-                        android:letterSpacing="0.08"
-                        android:textColor="#38BDF8"
+                        android:textColor="@color/omnia_ok_text"
                         android:layout_marginBottom="6dp" />
-
                     <TextView
                         android:id="@+id/tvPermStatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:textSize="11sp"
-                        android:textColor="#E2E8F0"
+                        android:textSize="12sp"
+                        android:textColor="@color/omnia_text_secondary"
+                        android:lineSpacingExtra="2dp"
+                        android:layout_marginBottom="6dp"
+                        android:text="Permissões: verificando..." />
+
+                    <TextView
+                        android:id="@+id/tvShizukuStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12.5sp"
+                        android:textColor="@color/omnia_text_primary"
                         android:lineSpacingExtra="3dp"
-                        android:layout_marginBottom="10dp" />
-
-                    <Button
-                        android:id="@+id/btnCopyAdbCmd"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:text="📋 COPIAR COMANDO ADB / ASHELL"
-                        android:fontFamily="monospace"
-                        android:textStyle="bold"
-                        android:textSize="11sp"
-                        android:background="@drawable/bg_pill_blue"
-                        android:textColor="#DBEAFE"
-                        android:layout_marginBottom="6dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <Button
-                            android:id="@+id/btnGrantUsagePerm"
-                            android:layout_width="0dp"
-                            android:layout_height="38dp"
-                            android:layout_weight="1"
-                            android:text="🔑 Acesso de Uso"
-                            android:fontFamily="monospace"
-                            android:textSize="10.5sp"
-                            android:background="@drawable/bg_pill_dark"
-                            android:textColor="#93C5FD"
-                            android:layout_marginEnd="6dp" />
-
-                        <Button
-                            android:id="@+id/btnGrantFilesPerm"
-                            android:layout_width="0dp"
-                            android:layout_height="38dp"
-                            android:layout_weight="1"
-                            android:text="📁 Todos Arquivos"
-                            android:fontFamily="monospace"
-                            android:textSize="10.5sp"
-                            android:background="@drawable/bg_pill_dark"
-                            android:textColor="#93C5FD" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_hud_card"
-                    android:padding="14dp"
-                    android:layout_marginBottom="10dp">
-
-                    <TextView
-                        android:id="@+id/tvAuditTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="AUDITOR DO SISTEMA"
-                        android:fontFamily="monospace"
-                        android:textSize="11.5sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.1"
-                        android:textColor="#C084FC"
-                        android:layout_marginBottom="6dp" />
-
-                    <TextView
-                        android:id="@+id/tvAudit"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:textColor="#E2E8F0"
-                        android:lineSpacingExtra="3dp"
-                        android:layout_marginBottom="10dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <Button
-                            android:id="@+id/btnOpenDisplay"
-                            android:layout_width="0dp"
-                            android:layout_height="38dp"
-                            android:layout_weight="1"
-                            android:text="Visor"
-                            android:fontFamily="monospace"
-                            android:textSize="11sp"
-                            android:background="@drawable/bg_pill_dark"
-                            android:textColor="#93C5FD"
-                            android:layout_marginEnd="4dp" />
-
-                        <Button
-                            android:id="@+id/btnOpenBattery"
-                            android:layout_width="0dp"
-                            android:layout_height="38dp"
-                            android:layout_weight="1"
-                            android:text="Bateria"
-                            android:fontFamily="monospace"
-                            android:textSize="11sp"
-                            android:background="@drawable/bg_pill_dark"
-                            android:textColor="#93C5FD"
-                            android:layout_marginEnd="4dp" />
-
-                        <Button
-                            android:id="@+id/btnOpenConnections"
-                            android:layout_width="0dp"
-                            android:layout_height="38dp"
-                            android:layout_weight="1"
-                            android:text="Redes"
-                            android:fontFamily="monospace"
-                            android:textSize="11sp"
-                            android:background="@drawable/bg_pill_dark"
-                            android:textColor="#93C5FD"
-                            android:layout_marginEnd="4dp" />
-
-                        <Button
-                            android:id="@+id/btnOpenAppInfo"
-                            android:layout_width="0dp"
-                            android:layout_height="38dp"
-                            android:layout_weight="1"
-                            android:text="App"
-                            android:fontFamily="monospace"
-                            android:textSize="11sp"
-                            android:background="@drawable/bg_pill_dark"
-                            android:textColor="#93C5FD" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_hud_card"
-                    android:padding="14dp"
-                    android:layout_marginBottom="10dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="PLANO ONE UI (SALVO NO BACKUP)"
-                        android:fontFamily="monospace"
-                        android:textSize="11.5sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.1"
-                        android:textColor="#2DD4BF"
-                        android:layout_marginBottom="6dp" />
-
-                    <CheckBox
-                        android:id="@+id/cbRoutineWifiCalling"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Rotina: Wi-Fi de casa/trabalho → Chamadas Wi-Fi + Modo Avião"
-                        android:textSize="12sp"
-                        android:textColor="#E2E8F0"
-                        android:layout_marginBottom="4dp" />
-
-                    <CheckBox
-                        android:id="@+id/cbRoutineLookStay"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Timeout ≤ 1 min + 'Manter tela ligada enquanto olhando'"
-                        android:textSize="12sp"
-                        android:textColor="#E2E8F0"
-                        android:layout_marginBottom="4dp" />
-
-                    <CheckBox
-                        android:id="@+id/cbRoutineDeepSleepApps"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Suspensão profunda apenas em apps raros (NUNCA WhatsApp, Bancos ou Alarmes)"
-                        android:textSize="12sp"
-                        android:textColor="#E2E8F0"
-                        android:layout_marginBottom="4dp" />
-
-                    <CheckBox
-                        android:id="@+id/cbBaselineDisplay"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Preservar resolução nativa e taxa adaptativa (diferença p/ 60Hz/FHD varia por uso)"
-                        android:textSize="12sp"
-                        android:textColor="#E2E8F0" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_hud_card"
-                    android:padding="14dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="ESPECIFICAÇÕES DO PAINEL"
-                        android:fontFamily="monospace"
-                        android:textSize="11sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.1"
-                        android:textColor="#94A3B8"
-                        android:layout_marginBottom="4dp" />
-
-                    <TextView
-                        android:id="@+id/tvHardwareSummary"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:textColor="#CBD5E1"
-                        android:lineSpacingExtra="2dp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- TAB 4: COFRE -->
-            <LinearLayout
-                android:id="@+id/tabVault"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_hud_card"
-                    android:padding="14dp"
-                    android:layout_marginBottom="10dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="DIÁRIO DE CONTEXTO DO CICLO"
-                        android:fontFamily="monospace"
-                        android:textSize="11.5sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.1"
-                        android:textColor="#38BDF8"
-                        android:layout_marginBottom="6dp" />
-
-                    <EditText
-                        android:id="@+id/etUserContext"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Ex.: 4G/5G na rua, Waze 40m, jogos, sinal fraco..."
-                        android:textColor="#F8FAFC"
-                        android:textColorHint="#64748B"
-                        android:textSize="13sp"
-                        android:background="#0F172A"
-                        android:padding="10dp"
-                        android:minLines="2"
-                        android:layout_marginBottom="8dp" />
-
-                    <Button
-                        android:id="@+id/btnSaveContext"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:text="SALVAR NOTA NO CICLO ATUAL"
-                        android:fontFamily="monospace"
-                        android:textStyle="bold"
-                        android:textSize="11.5sp"
-                        android:background="@drawable/bg_pill_blue"
-                        android:textColor="#DBEAFE" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_hud_card"
-                    android:padding="14dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="COFRE &amp; BACKUP GOOGLE DRIVE"
-                        android:fontFamily="monospace"
-                        android:textSize="11.5sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.1"
-                        android:textColor="#60A5FA"
-                        android:layout_marginBottom="6dp" />
-
-                    <TextView
-                        android:id="@+id/tvStorageUsage"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:textSize="12sp"
-                        android:textColor="#94A3B8"
-                        android:layout_marginBottom="10dp" />
+                        android:layout_marginBottom="10dp"
+                        android:text="Verificando Shizuku..." />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -845,78 +1281,1067 @@
                         android:layout_marginBottom="8dp">
 
                         <Button
-                            android:id="@+id/btnDriveBackup"
+                            android:id="@+id/btnShizukuAutoSetup"
                             android:layout_width="0dp"
                             android:layout_height="44dp"
                             android:layout_weight="1"
-                            android:text="☁️ BACKUP DRIVE"
-                            android:fontFamily="monospace"
+                            android:text="Auto-Ativar Shizuku"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
                             android:textStyle="bold"
-                            android:textSize="11.5sp"
+                            android:textSize="12.5sp"
+                            android:background="@drawable/bg_pill_green"
+                            android:textColor="@color/omnia_ok_text"
+                            android:layout_marginEnd="8dp" />
+
+                        <Button
+                            android:id="@+id/btnQuickBatteryFixes"
+                            android:layout_width="0dp"
+                            android:layout_height="44dp"
+                            android:layout_weight="1"
+                            android:text="Preset Bateria"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
+                            android:textStyle="bold"
+                            android:textSize="12.5sp"
                             android:background="@drawable/bg_pill_blue"
-                            android:textColor="#DBEAFE"
+                            android:textColor="@color/omnia_info_text" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnCopyAdbCmd"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:text="Copiar ADB"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="11.5sp"
+                            android:background="@drawable/bg_pill_dark"
+                            android:textColor="@color/omnia_text_primary"
                             android:layout_marginEnd="6dp" />
 
                         <Button
-                            android:id="@+id/btnRestoreBackup"
+                            android:id="@+id/btnGrantUsagePerm"
                             android:layout_width="0dp"
-                            android:layout_height="44dp"
+                            android:layout_height="40dp"
                             android:layout_weight="1"
-                            android:text="📥 RESTAURAR"
-                            android:fontFamily="monospace"
-                            android:textStyle="bold"
+                            android:text="Uso de Apps"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
                             android:textSize="11.5sp"
-                            android:background="@drawable/bg_pill_green"
-                            android:textColor="#D1FAE5" />
+                            android:background="@drawable/bg_pill_dark"
+                            android:textColor="@color/omnia_text_secondary"
+                            android:layout_marginEnd="6dp" />
+
+                        <Button
+                            android:id="@+id/btnGrantFilesPerm"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:text="Arquivos"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="11.5sp"
+                            android:background="@drawable/bg_pill_dark"
+                            android:textColor="@color/omnia_text_secondary" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- ACCORDION 1: ENERGIA & RÁDIO (Open by default) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_hud_card"
+                    android:padding="15dp"
+                    android:layout_marginBottom="12dp">
+
+                    <LinearLayout
+                        android:id="@+id/layoutAccHead1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Energia, Carga &amp; Rádio"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="14.5sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/omnia_text_primary" />
+
+                            <TextView
+                                android:id="@+id/tvAccSummary1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Perfil Leve, limite 80%, 4G/5G, MCF e AirDrop"
+                                android:textSize="12sp"
+                                android:textColor="@color/omnia_text_secondary" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/ivAccChevron1"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:padding="2dp"
+                            android:src="@drawable/ic_chevron_up"
+                            android:tint="@color/omnia_text_secondary"
+                            android:contentDescription="Alternar seção Energia e Rádio" />
                     </LinearLayout>
 
-                    <Button
-                        android:id="@+id/btnCleanStorage"
+                    <LinearLayout
+                        android:id="@+id/layoutAccBody1"
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:text="ARQUIVAR ZIP E LIMPAR BRUTOS (&gt; 7 DIAS)"
-                        android:fontFamily="monospace"
-                        android:textSize="11sp"
-                        android:background="@drawable/bg_pill_dark"
-                        android:textColor="#CBD5E1" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="10dp"
+                        android:visibility="visible">
+
+                        <TextView
+                            android:id="@+id/tvQuickControlsStatus"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/omnia_text_secondary"
+                            android:lineSpacingExtra="2dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="Carregando ajustes..." />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="8dp">
+
+                            <Button
+                                android:id="@+id/btnToggleLowHeat"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:text="Perfil Leve"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:background="@drawable/bg_pill_dark"
+                                android:textColor="@color/omnia_text_primary"
+                                android:layout_marginEnd="8dp" />
+
+                            <Button
+                                android:id="@+id/btnToggleProtectBattery"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:text="Carga 80%"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:background="@drawable/bg_pill_dark"
+                                android:textColor="@color/omnia_text_primary" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="8dp">
+
+                            <Button
+                                android:id="@+id/btnToggleNetworkMode"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:text="Modo 4G/5G"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:background="@drawable/bg_pill_dark"
+                                android:textColor="@color/omnia_text_primary"
+                                android:layout_marginEnd="8dp" />
+
+                            <Button
+                                android:id="@+id/btnToggleMcfContinuity"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:text="Continuidade MCF"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:background="@drawable/bg_pill_dark"
+                                android:textColor="@color/omnia_text_primary" />
+                        </LinearLayout>
+
+                        <Button
+                            android:id="@+id/btnToggleMosey"
+                            android:layout_width="match_parent"
+                            android:layout_height="44dp"
+                            android:text="Mosey / AirDrop"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:background="@drawable/bg_pill_dark"
+                            android:textColor="@color/omnia_text_primary" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- ACCORDION 2: TELA, HZ & ANIMAÇÕES -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_hud_card"
+                    android:padding="15dp"
+                    android:layout_marginBottom="12dp">
+
+                    <LinearLayout
+                        android:id="@+id/layoutAccHead2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tela, Hz, AOD &amp; Animações"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="14.5sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/omnia_text_primary" />
+
+                            <TextView
+                                android:id="@+id/tvAccSummary2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Taxa adaptativa, Brilho Extra e escalas 0.0–1.0x"
+                                android:textSize="12sp"
+                                android:textColor="@color/omnia_text_secondary" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/ivAccChevron2"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:padding="2dp"
+                            android:src="@drawable/ic_chevron_down"
+                            android:tint="@color/omnia_text_secondary"
+                            android:contentDescription="Alternar seção Tela e Animações" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutAccBody2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="10dp"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="10dp">
+
+                            <Button
+                                android:id="@+id/btnConfigureRefreshHz"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:text="Hz Adaptativo"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:background="@drawable/bg_pill_blue"
+                                android:textColor="@color/omnia_info_text"
+                                android:layout_marginEnd="8dp" />
+
+                            <Button
+                                android:id="@+id/btnCycleAodMode"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:text="AOD: Toque"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:background="@drawable/bg_pill_dark"
+                                android:textColor="@color/omnia_text_primary" />
+                        </LinearLayout>
+
+                        <!-- Brilho Extra + Intensidade -->
+                        <LinearLayout
+                            android:id="@+id/layoutExtraDimControls"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:background="@drawable/bg_surface_tonal"
+                            android:padding="12dp"
+                            android:layout_marginBottom="12dp">
+
+                            <Button
+                                android:id="@+id/btnToggleExtraDim"
+                                android:layout_width="match_parent"
+                                android:layout_height="44dp"
+                                android:text="Brilho Extra"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="12.5sp"
+                                android:textStyle="bold"
+                                android:background="@drawable/bg_pill_dark"
+                                android:textColor="@color/omnia_text_primary"
+                                android:layout_marginBottom="8dp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Redução:"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/omnia_text_secondary"
+                                    android:layout_marginEnd="8dp" />
+
+                                <SeekBar
+                                    android:id="@+id/seekExtraDimLevel"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:max="100"
+                                    android:progress="62" />
+
+                                <TextView
+                                    android:id="@+id/tvExtraDimPct"
+                                    android:layout_width="46dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="end"
+                                    android:fontFamily="monospace"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/omnia_primary"
+                                    android:text="62%" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!-- Escalas de Animação Independentes (0.0x - 1.0x) -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:background="@drawable/bg_surface_tonal"
+                            android:padding="12dp"
+                            android:layout_marginBottom="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Escala das Animações (0.0x – 1.0x)"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="12.5sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/omnia_text_primary"
+                                android:layout_marginBottom="8dp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="6dp">
+
+                                <TextView
+                                    android:layout_width="76dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="Janela"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/omnia_text_secondary" />
+
+                                <SeekBar
+                                    android:id="@+id/seekAnimWindow"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:max="10"
+                                    android:progress="7" />
+
+                                <TextView
+                                    android:id="@+id/tvAnimWindowVal"
+                                    android:layout_width="40dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="end"
+                                    android:fontFamily="monospace"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/omnia_primary"
+                                    android:text="0.7x" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="6dp">
+
+                                <TextView
+                                    android:layout_width="76dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="Transição"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/omnia_text_secondary" />
+
+                                <SeekBar
+                                    android:id="@+id/seekAnimTransition"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:max="10"
+                                    android:progress="5" />
+
+                                <TextView
+                                    android:id="@+id/tvAnimTransitionVal"
+                                    android:layout_width="40dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="end"
+                                    android:fontFamily="monospace"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/omnia_primary"
+                                    android:text="0.5x" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="10dp">
+
+                                <TextView
+                                    android:layout_width="76dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="Animator"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/omnia_text_secondary" />
+
+                                <SeekBar
+                                    android:id="@+id/seekAnimAnimator"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:max="10"
+                                    android:progress="5" />
+
+                                <TextView
+                                    android:id="@+id/tvAnimAnimatorVal"
+                                    android:layout_width="40dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="end"
+                                    android:fontFamily="monospace"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/omnia_primary"
+                                    android:text="0.5x" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <Button
+                                    android:id="@+id/btnAnimPresetIdeal"
+                                    android:layout_width="0dp"
+                                    android:layout_height="40dp"
+                                    android:layout_weight="1.25"
+                                    android:text="0.7 / 0.5 / 0.5"
+                                    android:textAllCaps="false"
+                                    android:stateListAnimator="@null"
+                                    android:fontFamily="monospace"
+                                    android:textSize="11.5sp"
+                                    android:textStyle="bold"
+                                    android:background="@drawable/bg_pill_blue"
+                                    android:textColor="@color/omnia_info_text"
+                                    android:layout_marginEnd="6dp" />
+
+                                <Button
+                                    android:id="@+id/btnAnimPresetFast"
+                                    android:layout_width="0dp"
+                                    android:layout_height="40dp"
+                                    android:layout_weight="0.85"
+                                    android:text="0.5x Tudo"
+                                    android:textAllCaps="false"
+                                    android:stateListAnimator="@null"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:textSize="11.5sp"
+                                    android:background="@drawable/bg_pill_dark"
+                                    android:textColor="@color/omnia_text_primary"
+                                    android:layout_marginEnd="6dp" />
+
+                                <Button
+                                    android:id="@+id/btnAnimPresetStock"
+                                    android:layout_width="0dp"
+                                    android:layout_height="40dp"
+                                    android:layout_weight="0.85"
+                                    android:text="1.0x Padrão"
+                                    android:textAllCaps="false"
+                                    android:stateListAnimator="@null"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:textSize="11.5sp"
+                                    android:background="@drawable/bg_pill_dark"
+                                    android:textColor="@color/omnia_text_secondary" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!-- Quick System Display/Battery Shortcuts -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="6dp">
+
+                            <Button
+                                android:id="@+id/btnOpenDisplay"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:text="Atalho Tela"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="11.5sp"
+                                android:background="@drawable/bg_pill_dark"
+                                android:textColor="@color/omnia_text_primary"
+                                android:layout_marginEnd="6dp" />
+
+                            <Button
+                                android:id="@+id/btnOpenBattery"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:text="Atalho Bateria"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="11.5sp"
+                                android:background="@drawable/bg_pill_dark"
+                                android:textColor="@color/omnia_text_primary"
+                                android:layout_marginEnd="6dp" />
+
+                            <Button
+                                android:id="@+id/btnOpenAodSettings"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:text="Atalho AOD"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="11.5sp"
+                                android:background="@drawable/bg_pill_dark"
+                                android:textColor="@color/omnia_text_primary" />
+                        </LinearLayout>
+
+                        <Button
+                            android:id="@+id/btnOpenConnections"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:text="Configurações de Conexões &amp; Redes"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="12sp"
+                            android:background="@drawable/bg_pill_dark"
+                            android:textColor="@color/omnia_text_secondary" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- ACCORDION 3: DOZE, FREEZER & ROTINAS -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_hud_card"
+                    android:padding="15dp"
+                    android:layout_marginBottom="12dp">
+
+                    <LinearLayout
+                        android:id="@+id/layoutAccHead3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ART, Freezer, Caches &amp; Plano"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="14.5sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/omnia_text_primary" />
+
+                            <TextView
+                                android:id="@+id/tvAccSummary3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Compilação speed-profile, Freezer e rotinas salvas"
+                                android:textSize="12sp"
+                                android:textColor="@color/omnia_text_secondary" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/ivAccChevron3"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:padding="2dp"
+                            android:src="@drawable/ic_chevron_down"
+                            android:tint="@color/omnia_text_secondary"
+                            android:contentDescription="Alternar seção Freezer e Otimização" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutAccBody3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="10dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/tvMaintenanceStatus"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/omnia_text_secondary"
+                            android:lineSpacingExtra="2dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="Manutenção sob demanda via Shizuku." />
+
+                        <Button
+                            android:id="@+id/btnArtCompile"
+                            android:layout_width="match_parent"
+                            android:layout_height="44dp"
+                            android:text="Compilar ART (Top 10 Apps · speed-profile)"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="12.5sp"
+                            android:textStyle="bold"
+                            android:background="@drawable/bg_pill_blue"
+                            android:textColor="@color/omnia_info_text"
+                            android:layout_marginBottom="8dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="14dp">
+
+                            <Button
+                                android:id="@+id/btnToggleFreezer"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:text="Freezer de Apps"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:background="@drawable/bg_pill_dark"
+                                android:textColor="@color/omnia_text_primary"
+                                android:layout_marginEnd="8dp" />
+
+                            <Button
+                                android:id="@+id/btnTrimCaches"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:text="Limpar Caches (Trim)"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:background="@drawable/bg_pill_green"
+                                android:textColor="@color/omnia_ok_text" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Plano One UI (Salvo no Backup)"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/omnia_primary"
+                            android:layout_marginBottom="6dp" />
+
+                        <CheckBox
+                            android:id="@+id/cbRoutineWifiCalling"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Rotina Bixby: Wi-Fi de casa/trabalho → Chamadas Wi-Fi + Modo Avião"
+                            android:textSize="12.5sp"
+                            android:textColor="@color/omnia_text_primary"
+                            android:layout_marginBottom="4dp" />
+
+                        <CheckBox
+                            android:id="@+id/cbRoutineLookStay"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Timeout 1 min + 'Manter tela ligada enquanto olhando'"
+                            android:textSize="12.5sp"
+                            android:textColor="@color/omnia_text_primary"
+                            android:layout_marginBottom="4dp" />
+
+                        <CheckBox
+                            android:id="@+id/cbRoutineDeepSleepApps"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Suspensão profunda apenas em apps raros (NUNCA WhatsApp, Bancos ou Alarmes)"
+                            android:textSize="12.5sp"
+                            android:textColor="@color/omnia_text_primary"
+                            android:layout_marginBottom="4dp" />
+
+                        <CheckBox
+                            android:id="@+id/cbBaselineDisplay"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Manter WQHD+ e 120Hz adaptativo (diferença p/ FHD+ &lt;1% em 2D)"
+                            android:textSize="12.5sp"
+                            android:textColor="@color/omnia_text_primary" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- ACCORDION 4: VULKAN HWUI, AUDITORIA & HARDWARE -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_hud_card"
+                    android:padding="15dp">
+
+                    <LinearLayout
+                        android:id="@+id/layoutAccHead4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Vulkan HWUI, Auditoria &amp; Info"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="14.5sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/omnia_text_primary" />
+
+                            <TextView
+                                android:id="@+id/tvAccSummary4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Renderer skiavk, gfxinfo, auditoria ROM e Wi-Fi 7"
+                                android:textSize="12sp"
+                                android:textColor="@color/omnia_text_secondary" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/ivAccChevron4"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:padding="2dp"
+                            android:src="@drawable/ic_chevron_down"
+                            android:tint="@color/omnia_text_secondary"
+                            android:contentDescription="Alternar seção Vulkan e Auditoria" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutAccBody4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="10dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/tvVulkanTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Renderizador HWUI (Vulkan skiavk)"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/omnia_primary"
+                            android:layout_marginBottom="4dp" />
+
+                        <TextView
+                            android:id="@+id/tvVulkanStatus"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="12.5sp"
+                            android:textColor="@color/omnia_text_primary"
+                            android:lineSpacingExtra="3dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="Verificando renderizador..." />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="14dp">
+
+                            <Button
+                                android:id="@+id/btnVulkanApply"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1.15"
+                                android:text="Ativar Vulkan"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textStyle="bold"
+                                android:textSize="12sp"
+                                android:background="@drawable/bg_pill_blue"
+                                android:textColor="@color/omnia_info_text"
+                                android:layout_marginEnd="6dp" />
+
+                            <Button
+                                android:id="@+id/btnVulkanVerify"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:text="Ver gfxinfo"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="12sp"
+                                android:background="@drawable/bg_pill_dark"
+                                android:textColor="@color/omnia_text_primary"
+                                android:layout_marginEnd="6dp" />
+
+                            <Button
+                                android:id="@+id/btnVulkanRevert"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="0.85"
+                                android:text="Reverter"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="12sp"
+                                android:background="@drawable/bg_pill_red"
+                                android:textColor="@color/omnia_alert_text" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvAuditTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Auditor do Sistema"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/omnia_ok_text"
+                            android:layout_marginBottom="6dp" />
+
+                        <TextView
+                            android:id="@+id/tvAudit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="monospace"
+                            android:textSize="11.5sp"
+                            android:textColor="@color/omnia_text_secondary"
+                            android:lineSpacingExtra="3dp"
+                            android:layout_marginBottom="12dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Especificações do Aparelho"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/omnia_text_primary"
+                            android:layout_marginBottom="4dp" />
+
+                        <TextView
+                            android:id="@+id/tvHardwareSummary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/omnia_text_secondary"
+                            android:lineSpacingExtra="3dp"
+                            android:layout_marginBottom="12dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/btnOpenWifi7Labs"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:text="Wi-Fi 7 Labs"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="12sp"
+                                android:background="@drawable/bg_pill_dark"
+                                android:textColor="@color/omnia_info_text"
+                                android:layout_marginEnd="8dp" />
+
+                            <Button
+                                android:id="@+id/btnOpenAppInfo"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:text="Info do Omnia"
+                                android:textAllCaps="false"
+                                android:stateListAnimator="@null"
+                                android:fontFamily="sans-serif-medium"
+                                android:textSize="12sp"
+                                android:background="@drawable/bg_pill_dark"
+                                android:textColor="@color/omnia_text_secondary" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- TAB 5: PERF -->
+            <!-- ==================== TAB 5: COFRE (Notas, Drive & Retenção) ==================== -->
             <LinearLayout
-                android:id="@+id/tabPerf"
+                android:id="@+id/tabVault"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone">
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cofre &amp; Notas"
+                    android:fontFamily="sans-serif-medium"
+                    android:textSize="19sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/omnia_text_primary"
+                    android:layout_marginBottom="2dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Contexto do ciclo atual, backup no Google Drive e limpeza segura"
+                    android:textSize="12sp"
+                    android:textColor="@color/omnia_text_secondary"
+                    android:layout_marginBottom="12dp" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/bg_hud_card"
-                    android:padding="12dp"
-                    android:layout_marginBottom="10dp">
+                    android:padding="15dp"
+                    android:layout_marginBottom="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TELEMETRIA DE HARDWARE · AO VIVO"
-                        android:fontFamily="monospace"
+                        android:text="Nota de Contexto do Ciclo Atual"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="13.5sp"
                         android:textStyle="bold"
-                        android:textSize="11sp"
-                        android:letterSpacing="0.08"
-                        android:textColor="#38BDF8"
-                        android:layout_marginBottom="4dp" />
+                        android:textColor="@color/omnia_primary"
+                        android:layout_marginBottom="8dp" />
 
-                    <TextView
-                        android:id="@+id/tvPerfStatus"
+                    <EditText
+                        android:id="@+id/etUserContext"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="● ATIVA APENAS NESTA ABA (0% SEGUNDO PLANO)"
-                        android:fontFamily="monospace"
-                        android:textSize="10sp"
-                        android:textColor="#34D399" />
+                        android:minHeight="48dp"
+                        android:hint="Ex: Uso 5G com Waze, vídeo longo, Spotify..."
+                        android:textColor="@color/omnia_text_primary"
+                        android:textColorHint="@color/omnia_text_muted"
+                        android:textSize="13.5sp"
+                        android:background="@drawable/bg_input_hud"
+                        android:padding="12dp"
+                        android:layout_marginBottom="10dp" />
+
+                    <Button
+                        android:id="@+id/btnSaveContext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
+                        android:text="Salvar Nota do Ciclo"
+                        android:textAllCaps="false"
+                        android:stateListAnimator="@null"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:paddingStart="18dp"
+                        android:paddingEnd="18dp"
+                        android:background="@drawable/bg_pill_blue"
+                        android:textColor="@color/omnia_info_text" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -924,225 +2349,297 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/bg_hud_card"
-                    android:padding="12dp"
-                    android:layout_marginBottom="10dp">
+                    android:padding="15dp"
+                    android:layout_marginBottom="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="PROCESSADOR · CLOCK POR NÚCLEO"
-                        android:fontFamily="monospace"
+                        android:text="Cofre de Logs · Google Drive"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="13.5sp"
                         android:textStyle="bold"
-                        android:textSize="10.5sp"
-                        android:letterSpacing="0.08"
-                        android:textColor="#60A5FA"
+                        android:textColor="@color/omnia_alert_text"
                         android:layout_marginBottom="6dp" />
 
                     <TextView
-                        android:id="@+id/tvPerfCpu"
+                        android:id="@+id/tvStorageUsage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="monospace"
-                        android:textSize="11sp"
-                        android:textColor="#E2E8F0"
-                        android:lineSpacingExtra="2dp"
-                        android:text="Lendo núcleos..." />
+                        android:text="Calculando..."
+                        android:textSize="12sp"
+                        android:textColor="@color/omnia_text_secondary"
+                        android:layout_marginBottom="12dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="10dp">
+
+                        <Button
+                            android:id="@+id/btnDriveBackup"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:text="Backup Drive"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
+                            android:textStyle="bold"
+                            android:textSize="13sp"
+                            android:background="@drawable/bg_pill_blue"
+                            android:textColor="@color/omnia_info_text"
+                            android:layout_marginEnd="8dp" />
+
+                        <Button
+                            android:id="@+id/btnRestoreBackup"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:text="Restaurar"
+                            android:textAllCaps="false"
+                            android:stateListAnimator="@null"
+                            android:fontFamily="sans-serif-medium"
+                            android:textStyle="bold"
+                            android:textSize="13sp"
+                            android:background="@drawable/bg_pill_green"
+                            android:textColor="@color/omnia_ok_text" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btnCleanStorage"
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:text="Arquivar ZIP e Limpar Brutos (&gt; 7 dias)"
+                        android:textAllCaps="false"
+                        android:stateListAnimator="@null"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="12.5sp"
+                        android:background="@drawable/bg_pill_dark"
+                        android:textColor="@color/omnia_text_primary" />
                 </LinearLayout>
 
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_hud_card"
-                    android:padding="12dp"
-                    android:layout_marginBottom="10dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="SENSORES TÉRMICOS · CPU / MEMÓRIA / BATERIA"
-                        android:fontFamily="monospace"
-                        android:textStyle="bold"
-                        android:textSize="10.5sp"
-                        android:letterSpacing="0.08"
-                        android:textColor="#F87171"
-                        android:layout_marginBottom="6dp" />
-
-                    <TextView
-                        android:id="@+id/tvPerfThermals"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:textSize="11sp"
-                        android:textColor="#E2E8F0"
-                        android:lineSpacingExtra="2dp"
-                        android:text="Lendo sensores..." />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_hud_card"
-                    android:padding="12dp"
-                    android:layout_marginBottom="10dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="MEMÓRIA RAM &amp; BARRAMENTO DDR"
-                        android:fontFamily="monospace"
-                        android:textStyle="bold"
-                        android:textSize="10.5sp"
-                        android:letterSpacing="0.08"
-                        android:textColor="#34D399"
-                        android:layout_marginBottom="6dp" />
-
-                    <TextView
-                        android:id="@+id/tvPerfMemory"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:textSize="11sp"
-                        android:textColor="#E2E8F0"
-                        android:lineSpacingExtra="2dp"
-                        android:text="Lendo memória..." />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_hud_card"
-                    android:padding="12dp"
-                    android:layout_marginBottom="10dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="GPU &amp; ENERGIA INSTANTÂNEA"
-                        android:fontFamily="monospace"
-                        android:textStyle="bold"
-                        android:textSize="10.5sp"
-                        android:letterSpacing="0.08"
-                        android:textColor="#A78BFA"
-                        android:layout_marginBottom="6dp" />
-
-                    <TextView
-                        android:id="@+id/tvPerfGpuPower"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:textSize="11sp"
-                        android:textColor="#E2E8F0"
-                        android:lineSpacingExtra="2dp"
-                        android:text="Lendo energia..." />
-                </LinearLayout>
+                    android:gravity="center"
+                    android:text="Omnia Optimizer v6.0 · Zero serviço e 0% de dreno em segundo plano"
+                    android:textSize="11.5sp"
+                    android:textColor="@color/omnia_text_muted"
+                    android:paddingTop="4dp" />
             </LinearLayout>
 
         </FrameLayout>
     </ScrollView>
 
-    <!-- Bottom Cyber Navigation Bar -->
+    <!-- Bottom Hairline Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/omnia_stroke" />
+
+    <!-- Material 3 / One UI 5-Slot Navigation Bar -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="58dp"
+        android:layout_height="68dp"
         android:orientation="horizontal"
-        android:background="#080E1A"
+        android:background="@color/omnia_nav_bg"
         android:paddingStart="6dp"
         android:paddingEnd="6dp"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
         android:gravity="center">
 
-        <Button
+        <LinearLayout
             android:id="@+id/navHud"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:padding="0dp"
-            android:singleLine="true"
-            android:maxLines="1"
-            android:text="📡 HUD"
-            android:fontFamily="monospace"
-            android:textStyle="bold"
-            android:textSize="10sp"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/bg_nav_active"
-            android:layout_marginEnd="4dp" />
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless">
 
-        <Button
+            <FrameLayout
+                android:id="@+id/navPillHud"
+                android:layout_width="54dp"
+                android:layout_height="30dp"
+                android:background="@drawable/bg_nav_active"
+                android:layout_marginBottom="3dp">
+
+                <ImageView
+                    android:id="@+id/navIconHud"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_nav_home"
+                    android:tint="@color/omnia_on_primary_container"
+                    android:contentDescription="Início" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/navLabelHud"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Início"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="11.5sp"
+                android:textStyle="bold"
+                android:singleLine="true"
+                android:textColor="@color/omnia_text_primary" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/navPerf"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:padding="0dp"
-            android:singleLine="true"
-            android:maxLines="1"
-            android:text="⚡ PERF"
-            android:fontFamily="monospace"
-            android:textStyle="bold"
-            android:textSize="10sp"
-            android:textColor="#94A3B8"
-            android:background="@android:color/transparent"
-            android:layout_marginEnd="4dp" />
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless">
 
-        <Button
+            <FrameLayout
+                android:id="@+id/navPillPerf"
+                android:layout_width="54dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="3dp">
+
+                <ImageView
+                    android:id="@+id/navIconPerf"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_nav_system"
+                    android:tint="@color/omnia_text_secondary"
+                    android:contentDescription="Sistema" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/navLabelPerf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sistema"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="11.5sp"
+                android:singleLine="true"
+                android:textColor="@color/omnia_text_secondary" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/navDiag"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:padding="0dp"
-            android:singleLine="true"
-            android:maxLines="1"
-            android:text="📈 DIAG"
-            android:fontFamily="monospace"
-            android:textStyle="bold"
-            android:textSize="10sp"
-            android:textColor="#94A3B8"
-            android:background="@android:color/transparent"
-            android:layout_marginEnd="4dp" />
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless">
 
-        <Button
+            <FrameLayout
+                android:id="@+id/navPillDiag"
+                android:layout_width="54dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="3dp">
+
+                <ImageView
+                    android:id="@+id/navIconDiag"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_nav_cycles"
+                    android:tint="@color/omnia_text_secondary"
+                    android:contentDescription="Ciclos" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/navLabelDiag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ciclos"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="11.5sp"
+                android:singleLine="true"
+                android:textColor="@color/omnia_text_secondary" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/navAudit"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:padding="0dp"
-            android:singleLine="true"
-            android:maxLines="1"
-            android:text="⚙️ OTIM"
-            android:fontFamily="monospace"
-            android:textStyle="bold"
-            android:textSize="10sp"
-            android:textColor="#94A3B8"
-            android:background="@android:color/transparent"
-            android:layout_marginEnd="4dp" />
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless">
 
-        <Button
+            <FrameLayout
+                android:id="@+id/navPillAudit"
+                android:layout_width="54dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="3dp">
+
+                <ImageView
+                    android:id="@+id/navIconAudit"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_nav_tweaks"
+                    android:tint="@color/omnia_text_secondary"
+                    android:contentDescription="Ajustes" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/navLabelAudit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ajustes"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="11.5sp"
+                android:singleLine="true"
+                android:textColor="@color/omnia_text_secondary" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/navVault"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:padding="0dp"
-            android:singleLine="true"
-            android:maxLines="1"
-            android:text="☁️ COFRE"
-            android:fontFamily="monospace"
-            android:textStyle="bold"
-            android:textSize="10sp"
-            android:textColor="#94A3B8"
-            android:background="@android:color/transparent" />
-    </LinearLayout>
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless">
 
+            <FrameLayout
+                android:id="@+id/navPillVault"
+                android:layout_width="54dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="3dp">
+
+                <ImageView
+                    android:id="@+id/navIconVault"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_nav_vault"
+                    android:tint="@color/omnia_text_secondary"
+                    android:contentDescription="Cofre" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/navLabelVault"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cofre"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="11.5sp"
+                android:singleLine="true"
+                android:textColor="@color/omnia_text_secondary" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

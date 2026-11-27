@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widgetRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_hud_card"
+    android:orientation="vertical"
+    android:padding="11dp">
+
+    <!-- Row 1: Cyber Header + Status Pills + Refresh -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvWidgetHeader"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="OMNIA HUD · --:--"
+            android:textColor="#00E5FF"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvWidgetPillLeve"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_pill_blue"
+            android:paddingLeft="8dp"
+            android:paddingTop="3dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="3dp"
+            android:text="LEVE"
+            android:textColor="#93C5FD"
+            android:textSize="10.5sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvWidgetPillDim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/bg_pill_dark"
+            android:paddingLeft="8dp"
+            android:paddingTop="3dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="3dp"
+            android:text="DIM-"
+            android:textColor="#CBD5E1"
+            android:textSize="10.5sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvWidgetPillVulkan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/bg_pill_green"
+            android:paddingLeft="8dp"
+            android:paddingTop="3dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="3dp"
+            android:text="VULKAN"
+            android:textColor="#6EE7B7"
+            android:textSize="10.5sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btnWidgetRefresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/bg_pill_blue"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingTop="2dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="2dp"
+            android:text="↻"
+            android:textColor="#F8FAFC"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Row 2: Live Battery Hero + Active Cycle Live Stats -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1.15"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_pill_dark"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvWidgetBatPct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="--%"
+                    android:textColor="#F8FAFC"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvWidgetBatTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="--.-°C · Bat."
+                        android:textColor="#38BDF8"
+                        android:textSize="12.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvWidgetBatPower"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="-- mA · -- V"
+                        android:textColor="#94A3B8"
+                        android:textSize="11.5sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvWidgetBatSub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="Carga real: -- mAh"
+                android:textColor="#CBD5E1"
+                android:textSize="11.5sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_pill_dark"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tvWidgetLiveTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="📈 CICLO ATUAL · AO VIVO"
+                android:textColor="#38BDF8"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvWidgetLiveBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:lineSpacingExtra="2dp"
+                android:maxLines="3"
+                android:text="Toque ↻ para ler ciclo atual\nTela · Apagada · Gasto mAh"
+                android:textColor="#E2E8F0"
+                android:textSize="11.5sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Row 3: Reference Clean Cycle + System Audit Strip -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="0.80"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.18"
+            android:background="@drawable/bg_pill_dark"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingTop="7dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="7dp">
+
+            <TextView
+                android:id="@+id/tvWidgetCycleTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="✅ ÚLT. CICLO LIMPO"
+                android:textColor="#6EE7B7"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvWidgetCycleSub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:lineSpacingExtra="1dp"
+                android:maxLines="2"
+                android:text="Aguardando histórico"
+                android:textColor="#CBD5E1"
+                android:textSize="11.5sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_weight="0.82"
+            android:background="@drawable/bg_pill_dark"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingTop="7dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="7dp">
+
+            <TextView
+                android:id="@+id/tvWidgetAuditTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="⚙️ AUDITORIA · --%"
+                android:textColor="#93C5FD"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvWidgetAuditSub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:lineSpacingExtra="1dp"
+                android:maxLines="2"
+                android:text="Job: -- · Econ: --"
+                android:textColor="#CBD5E1"
+                android:textSize="11.5sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Row 4: Sentinela Anti-Wakelock + Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_pill_dark"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingTop="7dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="7dp">
+
+        <TextView
+            android:id="@+id/tvWidgetSentinel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="🛡️ Sentinela: Toque Caçar para verificar"
+            android:textColor="#6EE7B7"
+            android:textSize="11.5sp" />
+
+        <TextView
+            android:id="@+id/btnWidgetHunt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_pill_blue"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingTop="6dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="6dp"
+            android:text="🕵️ Caçar"
+            android:textColor="#93C5FD"
+            android:textSize="11.5sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btnWidgetPerf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/bg_pill_green"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingTop="6dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="6dp"
+            android:text="⚡ Perf"
+            android:textColor="#6EE7B7"
+            android:textSize="11.5sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

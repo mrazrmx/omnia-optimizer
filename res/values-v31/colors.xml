@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dynamic Material You (Android 12+ Light) -->
+    <color name="omnia_bg">@android:color/system_neutral1_10</color>
+    <color name="omnia_surface">@android:color/system_neutral1_0</color>
+    <color name="omnia_surface_alt">@android:color/system_neutral2_50</color>
+    <color name="omnia_nav_bg">@android:color/system_neutral1_10</color>
+    <color name="omnia_stroke">@android:color/system_neutral2_200</color>
+
+    <color name="omnia_primary">@android:color/system_accent1_600</color>
+    <color name="omnia_primary_container">@android:color/system_accent1_100</color>
+    <color name="omnia_on_primary_container">@android:color/system_accent1_900</color>
+
+    <color name="omnia_text_primary">@android:color/system_neutral1_900</color>
+    <color name="omnia_text_secondary">@android:color/system_neutral2_700</color>
+    <color name="omnia_text_muted">@android:color/system_neutral2_500</color>
+
+    <color name="omnia_chart_grid">@android:color/system_neutral2_200</color>
+    <color name="omnia_chart_spoke">@android:color/system_neutral2_100</color>
+</resources>
